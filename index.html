@@ -8,123 +8,188 @@
 <style>
 :root {
   --orange: #ff792f;
-  --orange-light: #ff9b60;
+  --orange-light: #ffb477;
   --white: #ffffff;
-  --muted: rgba(255,255,255,0.58);
-  --border: rgba(255,255,255,0.10);
+  --muted: rgba(255,255,255,0.68);
+  --glass-top: rgba(255,224,190,0.10);
+  --glass-middle: rgba(255,190,145,0.06);
+  --glass-bottom: rgba(255,155,95,0.09);
 }
 * {
   box-sizing: border-box;
   -webkit-tap-highlight-color: transparent;
 }
-html, body {
-  width: 100%;
-  height: 100%;
-  margin: 0;
+html,
+body {
+  width: 100% !important;
+  height: 100% !important;
+  margin: 0 !important;
+  padding: 0 !important;
   overflow: hidden;
-  background: transparent;
+  background: transparent !important;
   color: var(--white);
   font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Segoe UI", sans-serif;
 }
 body {
   position: relative;
 }
+button {
+  font: inherit;
+}
 .app {
-  height: 100%;
-  width: 100%;
   display: flex;
   flex-direction: column;
+  width: 100%;
+  height: 100%;
   overflow: hidden;
   background: transparent;
 }
+/* SHARED LIQUID GLASS */
+.liquid-glass-orange {
+  appearance: none;
+  -webkit-appearance: none;
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  border: none;
+  outline: none;
+  background: linear-gradient(
+    135deg,
+    rgba(255,224,190,0.10) 0%,
+    rgba(255,190,145,0.06) 45%,
+    rgba(255,155,95,0.09) 100%
+  );
+  backdrop-filter: blur(25px) saturate(180%);
+  -webkit-backdrop-filter: blur(25px) saturate(180%);
+  box-shadow:
+    inset 0 1.5px 2px rgba(255,183,105,0.65),
+    inset 0 -1px 2px rgba(255,133,55,0.35),
+    0 8px 24px rgba(255,135,55,0.10);
+  -webkit-mask-image: -webkit-radial-gradient(white, black);
+}
+.liquid-glass-orange::before {
+  content: "";
+  position: absolute;
+  z-index: 1;
+  top: 0;
+  left: 4%;
+  width: 92%;
+  height: 42%;
+  border-radius: 50%;
+  background: linear-gradient(
+    180deg,
+    rgba(255,190,115,0.22) 0%,
+    rgba(255,160,80,0.08) 38%,
+    rgba(255,140,60,0) 100%
+  );
+  filter: blur(9px);
+  pointer-events: none;
+}
+.liquid-glass-orange::after {
+  content: "";
+  position: absolute;
+  z-index: 1;
+  left: 8%;
+  right: 8%;
+  bottom: -14%;
+  height: 38%;
+  border-radius: 50%;
+  background: rgba(255,145,55,0.08);
+  filter: blur(20px);
+  pointer-events: none;
+}
 /* HEADER */
 .topbar {
+  position: relative;
+  z-index: 2;
   flex-shrink: 0;
-  min-height: 70px;
-  padding: 12px 16px;
+  min-height: 76px;
+  padding: 12px 15px;
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 12px;
-  background: rgba(0,0,0,0.25);
-  border-bottom: 1px solid rgba(255,255,255,0.07);
+  background: transparent;
 }
 .brand {
+  flex: 1;
   min-width: 0;
+  padding-left: 4px;
 }
 .brand-title {
-  font-size: 21px;
-  line-height: 1.1;
+  font-size: 23px;
+  line-height: 1.15;
   font-weight: 800;
-  letter-spacing: -0.7px;
+  letter-spacing: -0.8px;
 }
-.refresh {
+/* HEADER ACTIONS */
+.header-actions {
+  display: flex;
   flex-shrink: 0;
-  width: 43px;
-  height: 43px;
-  display: grid;
-  place-items: center;
-  border: 1px solid rgba(255,255,255,0.13);
-  border-radius: 15px;
-  color: white;
-  background: rgba(255,255,255,0.07);
-  font-size: 22px;
-  cursor: pointer;
-  transition: background 0.2s, transform 0.2s;
+  align-items: center;
+  gap: 9px;
 }
-.refresh:active {
-  transform: scale(0.92);
-  background: rgba(255,121,47,0.25);
-}
-.refresh.spinning {
-  animation: spin 0.7s linear infinite;
-}
-@keyframes spin {
-  to {
-    transform: rotate(360deg);
-  }
-}
-/* CANDY BALANCE */
-.balance-wrap {
-  flex-shrink: 0;
-  padding: 12px 13px 3px;
-}
-.balance-card {
+.candy-balance {
   position: relative;
+  isolation: isolate;
   overflow: hidden;
+  min-width: 83px;
+  height: 45px;
+  padding: 0 12px;
+  border-radius: 16px;
   display: flex;
   align-items: center;
-  justify-content: flex-start;
-  gap: 10px;
-  min-height: 62px;
-  padding: 12px 17px;
-  border-radius: 19px;
-  border: 1px solid rgba(255,121,47,0.32);
-  background:
-    radial-gradient(circle at 100% 0%, rgba(255,121,47,0.16), transparent 58%),
-    linear-gradient(135deg, rgba(255,121,47,0.09), rgba(255,255,255,0.025));
-  box-shadow:
-    0 8px 24px rgba(0,0,0,0.12),
-    inset 0 1px 0 rgba(255,255,255,0.04);
-  backdrop-filter: blur(18px);
-  -webkit-backdrop-filter: blur(18px);
+  justify-content: center;
+  gap: 7px;
+  color: #ffffff;
 }
 .candy-icon {
+  position: relative;
+  z-index: 2;
   flex-shrink: 0;
-  font-size: 27px;
+  font-size: 20px;
   line-height: 1;
 }
-.balance-number {
-  min-width: 0;
-  margin: 0;
-  font-size: 22px;
-  line-height: 1.1;
-  font-weight: 850;
-  letter-spacing: -0.5px;
+.candy-number {
+  position: relative;
+  z-index: 2;
+  font-size: 14px;
+  line-height: 1;
+  font-weight: 800;
+  font-variant-numeric: tabular-nums;
   overflow-wrap: anywhere;
+}
+.refresh {
+  position: relative;
+  z-index: 0;
+  flex-shrink: 0;
+  width: 45px;
+  height: 45px;
+  display: grid;
+  place-items: center;
+  border-radius: 16px;
+  color: white;
+  font-size: 23px;
+  cursor: pointer;
+  transition: none;
+}
+.refresh:active {
+  transform: none;
+  background: linear-gradient(
+    135deg,
+    rgba(255,220,175,0.16),
+    rgba(255,175,105,0.10),
+    rgba(255,145,70,0.12)
+  );
+}
+.refresh:disabled {
+  opacity: 0.7;
+  cursor: default;
 }
 /* STATUS */
 .status {
+  position: relative;
+  z-index: 2;
   flex-shrink: 0;
   min-height: 0;
   padding: 0 16px;
@@ -133,7 +198,7 @@ body {
   line-height: 1.4;
 }
 .status.visible {
-  padding-top: 10px;
+  padding-top: 7px;
   padding-bottom: 4px;
 }
 .status.error {
@@ -141,69 +206,92 @@ body {
 }
 /* BADGE LIST */
 .list {
+  position: relative;
+  z-index: 0;
   flex: 1;
   min-height: 0;
+  overflow-x: hidden;
   overflow-y: auto;
   overscroll-behavior: contain;
-  padding: 12px 13px 25px;
+  padding: 9px 13px 25px;
   scrollbar-width: none;
 }
 .list::-webkit-scrollbar {
   display: none;
 }
+/* BADGE CARDS */
 .badge-card {
   position: relative;
+  isolation: isolate;
   overflow: hidden;
   display: flex;
   align-items: center;
-  gap: 13px;
-  min-height: 92px;
-  margin-bottom: 11px;
+  gap: 12px;
+  min-height: 91px;
+  margin-bottom: 12px;
   padding: 17px;
-  border: 1px solid var(--border);
   border-radius: 23px;
-  background:
-    linear-gradient(
-      135deg,
-      rgba(255,255,255,0.075),
-      rgba(255,255,255,0.025)
-    );
+  border: 1px solid rgba(255,183,105,0.28);
+  background: linear-gradient(
+    135deg,
+    rgba(255,224,190,0.10) 0%,
+    rgba(255,190,145,0.06) 45%,
+    rgba(255,155,95,0.09) 100%
+  );
+  backdrop-filter: blur(25px) saturate(180%);
+  -webkit-backdrop-filter: blur(25px) saturate(180%);
   box-shadow:
-    0 8px 24px rgba(0,0,0,0.12),
-    inset 0 1px 0 rgba(255,255,255,0.035);
-  backdrop-filter: blur(18px);
-  -webkit-backdrop-filter: blur(18px);
-  animation: appear 0.3s ease both;
+    inset 0 1.5px 2px rgba(255,183,105,0.48),
+    inset 0 -1px 2px rgba(255,133,55,0.28),
+    0 8px 24px rgba(255,135,55,0.07);
+  -webkit-mask-image: -webkit-radial-gradient(white, black);
+}
+.badge-card::before {
+  content: "";
+  position: absolute;
+  z-index: 0;
+  top: 0;
+  left: 4%;
+  width: 92%;
+  height: 42%;
+  border-radius: 50%;
+  background: linear-gradient(
+    180deg,
+    rgba(255,190,115,0.18) 0%,
+    rgba(255,160,80,0.06) 38%,
+    rgba(255,140,60,0) 100%
+  );
+  filter: blur(9px);
+  pointer-events: none;
+}
+.badge-card::after {
+  content: "";
+  position: absolute;
+  z-index: 0;
+  left: 8%;
+  right: 8%;
+  bottom: -14%;
+  height: 38%;
+  border-radius: 50%;
+  background: rgba(255,145,55,0.07);
+  filter: blur(20px);
+  pointer-events: none;
 }
 .badge-card.claimable {
-  border-color: rgba(255,121,47,0.40);
-  background:
-    radial-gradient(
-      circle at 100% 0%,
-      rgba(255,121,47,0.15),
-      transparent 58%
-    ),
-    linear-gradient(
-      135deg,
-      rgba(255,255,255,0.08),
-      rgba(255,255,255,0.025)
-    );
-}
-@keyframes appear {
-  from {
-    opacity: 0;
-    transform: translateY(7px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
+  border-color: rgba(255,183,105,0.62);
+  box-shadow:
+    inset 0 1.5px 2px rgba(255,183,105,0.65),
+    inset 0 -1px 2px rgba(255,133,55,0.35),
+    0 8px 24px rgba(255,135,55,0.13);
 }
 .badge-info {
+  position: relative;
+  z-index: 2;
   flex: 1;
   min-width: 0;
 }
 .badge-name {
+  color: white;
   font-size: 15px;
   font-weight: 750;
   line-height: 1.4;
@@ -213,73 +301,103 @@ body {
   margin-top: 5px;
   color: var(--muted);
   font-size: 11px;
-  line-height: 1.4;
+  line-height: 1.45;
   overflow-wrap: anywhere;
 }
 .badge-reward {
   margin-top: 7px;
-  color: var(--orange-light);
+  color: #ffc08e;
   font-size: 11px;
   font-weight: 750;
 }
+/* CLAIM BUTTON */
 .badge-action {
+  position: relative;
+  z-index: 2;
+  isolation: isolate;
+  overflow: hidden;
   flex-shrink: 0;
   min-width: 76px;
   max-width: 105px;
-  padding: 10px 12px;
-  border: 0;
-  border-radius: 13px;
-  background: linear-gradient(135deg, #ff9b60, #ff7028);
-  color: #1a0c05;
+  padding: 11px 13px;
+  border-radius: 14px;
+  border: 1px solid rgba(255,183,105,0.50);
+  background: linear-gradient(
+    135deg,
+    rgba(255,224,190,0.19),
+    rgba(255,190,145,0.12),
+    rgba(255,155,95,0.16)
+  );
+  backdrop-filter: blur(25px) saturate(180%);
+  -webkit-backdrop-filter: blur(25px) saturate(180%);
+  box-shadow:
+    inset 0 1.5px 2px rgba(255,183,105,0.50),
+    inset 0 -1px 2px rgba(255,133,55,0.28),
+    0 4px 14px rgba(255,135,55,0.09);
+  color: #ffffff;
   font-size: 11px;
   font-weight: 800;
   cursor: pointer;
-  box-shadow: 0 4px 14px rgba(255,121,47,0.17);
-  transition: transform 0.2s, opacity 0.2s;
+  transition: none;
+}
+.badge-action::before {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  top: 0;
+  left: 5%;
+  width: 90%;
+  height: 45%;
+  border-radius: 50%;
+  background: rgba(255,190,115,0.16);
+  filter: blur(7px);
+  pointer-events: none;
 }
 .badge-action:active {
-  transform: scale(0.96);
+  transform: none;
+  background: rgba(255,175,105,0.20);
 }
 .badge-action:disabled {
   opacity: 0.65;
   cursor: default;
 }
-.earned-label {
+/* LOCKED / CLAIMED LABELS */
+.earned-label,
+.locked-label {
+  position: relative;
+  z-index: 2;
   flex-shrink: 0;
-  padding: 7px 9px;
-  border-radius: 11px;
-  color: #8fe5b0;
-  background: rgba(65,190,119,0.10);
-  border: 1px solid rgba(65,190,119,0.15);
+  padding: 8px 10px;
+  border-radius: 12px;
   font-size: 10px;
   font-weight: 750;
 }
-.locked-label {
-  flex-shrink: 0;
-  padding: 7px 9px;
-  border-radius: 11px;
-  color: rgba(255,255,255,0.44);
-  background: rgba(255,255,255,0.045);
-  border: 1px solid rgba(255,255,255,0.07);
-  font-size: 10px;
-  font-weight: 700;
+.earned-label {
+  color: #a6f0c0;
+  border: 1px solid rgba(112,221,157,0.22);
+  background: rgba(65,190,119,0.10);
 }
-/* CLAIMED BADGES */
+.locked-label {
+  color: rgba(255,255,255,0.56);
+  border: 1px solid rgba(255,183,105,0.18);
+  background: rgba(255,255,255,0.045);
+}
+/* CLAIMED OVERLAY */
 .claimed-overlay {
   position: absolute;
+  z-index: 5;
   inset: 0;
-  z-index: 2;
   display: flex;
   align-items: center;
   justify-content: center;
   gap: 8px;
-  background: rgba(0,0,0,0.77);
-  backdrop-filter: blur(5px);
-  -webkit-backdrop-filter: blur(5px);
+  background: rgba(20,10,4,0.72);
+  backdrop-filter: blur(7px) saturate(180%);
+  -webkit-backdrop-filter: blur(7px) saturate(180%);
   color: white;
-  font-size: 13px;
+  font-size: 12px;
   font-weight: 800;
-  letter-spacing: 1.1px;
+  letter-spacing: 1px;
   text-transform: uppercase;
 }
 .claimed-check {
@@ -288,12 +406,15 @@ body {
   display: grid;
   place-items: center;
   border-radius: 50%;
+  color: #a6f0c0;
   background: rgba(112,221,157,0.17);
-  color: #8fe5b0;
+  border: 1px solid rgba(112,221,157,0.18);
   font-size: 14px;
 }
 /* EMPTY STATE */
 .empty {
+  position: relative;
+  z-index: 2;
   min-height: 180px;
   display: flex;
   flex-direction: column;
@@ -305,7 +426,7 @@ body {
 }
 .empty-symbol {
   margin-bottom: 13px;
-  font-size: 35px;
+  font-size: 30px;
   color: var(--orange-light);
 }
 .empty-title {
@@ -328,42 +449,75 @@ body {
   width: max-content;
   max-width: calc(100% - 32px);
   padding: 12px 17px;
-  border: 1px solid rgba(255,255,255,0.12);
-  border-radius: 15px;
-  background: rgba(27,27,27,0.94);
+  border: 1px solid rgba(255,183,105,0.30);
+  border-radius: 16px;
+  background: linear-gradient(
+    135deg,
+    rgba(255,224,190,0.15),
+    rgba(255,190,145,0.09),
+    rgba(255,155,95,0.12)
+  );
+  backdrop-filter: blur(25px) saturate(180%);
+  -webkit-backdrop-filter: blur(25px) saturate(180%);
+  box-shadow:
+    inset 0 1px 2px rgba(255,183,105,0.30),
+    0 8px 24px rgba(255,135,55,0.10);
   color: white;
   font-size: 12px;
   font-weight: 650;
   text-align: center;
-  box-shadow: 0 8px 25px rgba(0,0,0,0.25);
   opacity: 0;
   transform: translate(-50%, 10px);
   pointer-events: none;
-  transition: opacity 0.2s, transform 0.2s;
+  transition: opacity 0.2s;
 }
 .toast.show {
   opacity: 1;
   transform: translate(-50%, 0);
 }
 @media (max-width: 360px) {
+  .topbar {
+    padding-right: 11px;
+    padding-left: 11px;
+    gap: 7px;
+  }
+  .brand-title {
+    font-size: 21px;
+  }
+  .header-actions {
+    gap: 7px;
+  }
+  .candy-balance {
+    min-width: 73px;
+    height: 42px;
+    padding: 0 9px;
+    gap: 5px;
+  }
+  .candy-number {
+    font-size: 13px;
+  }
+  .refresh {
+    width: 42px;
+    height: 42px;
+  }
   .badge-card {
     gap: 9px;
-    padding: 13px;
-  }
-  .badge-action {
-    min-width: 65px;
-    padding: 9px 8px;
+    padding: 14px;
   }
   .badge-name {
     font-size: 14px;
+  }
+  .badge-action {
+    min-width: 65px;
+    padding: 10px 8px;
   }
 }
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,
   *::after {
-    animation-duration: 0.01ms !important;
-    transition-duration: 0.01ms !important;
+    transition: none !important;
+    animation: none !important;
   }
 }
 </style>
@@ -374,19 +528,19 @@ body {
     <div class="brand">
       <div class="brand-title">The Hollow</div>
     </div>
-<button
-  class="refresh"
-  id="refreshButton"
-  aria-label="Refresh badges"
-  type="button"
->↻</button>
+<div class="header-actions">
+  <div class="candy-balance liquid-glass-orange" aria-label="Candy balance">
+    <span class="candy-icon" aria-hidden="true">🍬</span>
+    <span class="candy-number" id="candyBalance">0</span>
+  </div>
+  <button
+    class="refresh liquid-glass-orange"
+    id="refreshButton"
+    aria-label="Refresh badges"
+    type="button"
+  >↻</button>
+</div>
   </header>
-  <section class="balance-wrap">
-    <div class="balance-card">
-      <div class="candy-icon" aria-hidden="true">🍬</div>
-      <div class="balance-number" id="candyBalance">0</div>
-    </div>
-  </section>
   <div id="status" class="status"></div>
   <section id="badgeList" class="list" aria-live="polite"></section>
 </main>
@@ -462,6 +616,9 @@ function formatNumber(value) {
   }
   return number.toLocaleString();
 }
+function updateCandyBalance(value) {
+  candyBalanceElement.textContent = formatNumber(value);
+}
 function showStatus(message, type) {
   statusElement.textContent = message || "";
   statusElement.className = "status";
@@ -495,10 +652,28 @@ function sortBadges(badges) {
     return String(a.name || "").localeCompare(String(b.name || ""));
   });
 }
-function updateCandyBalance(value) {
-  candyBalanceElement.textContent = formatNumber(value);
+function renderBadges() {
+  listElement.replaceChildren();
+  if (!allBadges.length) {
+    listElement.innerHTML = `
+      <div class="empty">
+        <div class="empty-symbol">◇</div>
+        <div class="empty-title">No badges found</div>
+        <div class="empty-message">
+          No badges were returned. Tap refresh to try again.
+        </div>
+      </div>
+    `;
+    return;
+  }
+  const fragment = document.createDocumentFragment();
+  const sorted = sortBadges(allBadges);
+  sorted.forEach(function(badge) {
+    fragment.appendChild(createCard(badge));
+  });
+  listElement.appendChild(fragment);
 }
-function createCard(badge, index) {
+function createCard(badge) {
   const earned = isEarned(badge);
   const claimed = isClaimed(badge);
   const badgeId = getBadgeId(badge);
@@ -508,7 +683,6 @@ function createCard(badge, index) {
   if (earned && !claimed) {
     card.classList.add("claimable");
   }
-  card.style.animationDelay = Math.min(index * 0.025, 0.3) + "s";
   let actionHtml = "";
   if (claimed) {
     actionHtml = '<span class="earned-label">Claimed</span>';
@@ -548,28 +722,8 @@ function createCard(badge, index) {
     `;
     card.appendChild(overlay);
   }
+  card.dataset.badgeId = badgeId;
   return card;
-}
-function renderBadges() {
-  listElement.replaceChildren();
-  if (!allBadges.length) {
-    listElement.innerHTML = `
-      <div class="empty">
-        <div class="empty-symbol">◇</div>
-        <div class="empty-title">No badges found</div>
-        <div class="empty-message">
-          No badges were returned. Try refreshing.
-        </div>
-      </div>
-    `;
-    return;
-  }
-  const sorted = sortBadges(allBadges);
-  const fragment = document.createDocumentFragment();
-  sorted.forEach(function(badge, index) {
-    fragment.appendChild(createCard(badge, index));
-  });
-  listElement.appendChild(fragment);
 }
 async function refreshCandyBalance() {
   try {
@@ -587,7 +741,6 @@ async function loadBadges() {
   }
   loading = true;
   refreshButton.disabled = true;
-  refreshButton.classList.add("spinning");
   showStatus("Checking Roblox badge ownership…");
   try {
     const data = await requestJson(makeUrl("checkBadges"));
@@ -602,7 +755,11 @@ async function loadBadges() {
         badgeId: getBadgeId(badge)
       });
     });
-    updateCandyBalance(data.candy || 0);
+    if (typeof data.candy !== "undefined") {
+      updateCandyBalance(data.candy);
+    } else {
+      await refreshCandyBalance();
+    }
     renderBadges();
     showStatus("");
   } catch (error) {
@@ -620,7 +777,6 @@ async function loadBadges() {
   } finally {
     loading = false;
     refreshButton.disabled = false;
-    refreshButton.classList.remove("spinning");
   }
 }
 async function claimReward(badge, button) {
@@ -656,12 +812,15 @@ async function claimReward(badge, button) {
     });
     if (typeof data.candy !== "undefined") {
       updateCandyBalance(data.candy);
+    } else {
+      await refreshCandyBalance();
     }
     renderBadges();
     if (data.alreadyClaimed) {
       showToast("This reward was already claimed.");
     } else {
-      showToast("+" + formatNumber(data.candyAwarded || 0) + " Candy earned!");
+      const awarded = Number(data.candyAwarded || 0);
+      showToast("+" + formatNumber(awarded) + " Candy earned!");
     }
   } catch (error) {
     console.error("Badge claim error:", error);
