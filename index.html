@@ -11,16 +11,12 @@
   --orange-light: #ffb477;
   --white: #ffffff;
   --muted: rgba(255,255,255,0.68);
-  --glass-top: rgba(255,224,190,0.10);
-  --glass-middle: rgba(255,190,145,0.06);
-  --glass-bottom: rgba(255,155,95,0.09);
 }
 * {
   box-sizing: border-box;
   -webkit-tap-highlight-color: transparent;
 }
-html,
-body {
+html, body {
   width: 100% !important;
   height: 100% !important;
   margin: 0 !important;
@@ -101,14 +97,14 @@ button {
 /* HEADER */
 .topbar {
   position: relative;
-  z-index: 2;
+  z-index: 3;
   flex-shrink: 0;
   min-height: 76px;
   padding: 12px 15px;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 12px;
+  gap: 10px;
   background: transparent;
 }
 .brand {
@@ -122,58 +118,57 @@ button {
   font-weight: 800;
   letter-spacing: -0.8px;
 }
-/* HEADER ACTIONS */
 .header-actions {
   display: flex;
   flex-shrink: 0;
   align-items: center;
-  gap: 9px;
+  gap: 8px;
 }
+/* CANDY BALANCE */
 .candy-balance {
   position: relative;
   isolation: isolate;
   overflow: hidden;
-  min-width: 83px;
-  height: 45px;
-  padding: 0 12px;
-  border-radius: 16px;
+  min-width: 77px;
+  height: 43px;
+  padding: 0 10px;
+  border-radius: 15px;
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 7px;
+  gap: 6px;
   color: #ffffff;
 }
 .candy-icon {
   position: relative;
   z-index: 2;
   flex-shrink: 0;
-  font-size: 20px;
+  font-size: 19px;
   line-height: 1;
 }
 .candy-number {
   position: relative;
   z-index: 2;
-  font-size: 14px;
+  font-size: 13px;
   line-height: 1;
   font-weight: 800;
   font-variant-numeric: tabular-nums;
   overflow-wrap: anywhere;
 }
-.refresh {
+/* HEADER ICON BUTTONS */
+.icon-button {
   position: relative;
-  z-index: 0;
   flex-shrink: 0;
-  width: 45px;
-  height: 45px;
+  width: 43px;
+  height: 43px;
   display: grid;
   place-items: center;
-  border-radius: 16px;
+  border-radius: 15px;
   color: white;
-  font-size: 23px;
   cursor: pointer;
   transition: none;
 }
-.refresh:active {
+.icon-button:active {
   transform: none;
   background: linear-gradient(
     135deg,
@@ -182,9 +177,17 @@ button {
     rgba(255,145,70,0.12)
   );
 }
-.refresh:disabled {
+.icon-button:disabled {
   opacity: 0.7;
   cursor: default;
+}
+.refresh {
+  font-size: 24px;
+}
+.info-button {
+  font-size: 19px;
+  font-weight: 700;
+  font-family: Georgia, serif;
 }
 /* STATUS */
 .status {
@@ -361,7 +364,6 @@ button {
   opacity: 0.65;
   cursor: default;
 }
-/* LOCKED / CLAIMED LABELS */
 .earned-label,
 .locked-label {
   position: relative;
@@ -440,10 +442,122 @@ button {
   font-size: 12px;
   line-height: 1.5;
 }
+/* INFO POPUP */
+.info-backdrop {
+  position: fixed;
+  z-index: 20;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  background: rgba(0,0,0,0.38);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transition: opacity 0.18s ease, visibility 0.18s ease;
+}
+.info-backdrop.open {
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+}
+.info-panel {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  width: 100%;
+  max-width: 340px;
+  padding: 25px 22px 23px;
+  border-radius: 25px;
+  border: 1px solid rgba(255,183,105,0.38);
+  background: linear-gradient(
+    135deg,
+    rgba(255,224,190,0.15) 0%,
+    rgba(255,190,145,0.10) 45%,
+    rgba(255,155,95,0.14) 100%
+  );
+  backdrop-filter: blur(30px) saturate(180%);
+  -webkit-backdrop-filter: blur(30px) saturate(180%);
+  box-shadow:
+    inset 0 1.5px 2px rgba(255,183,105,0.55),
+    inset 0 -1px 2px rgba(255,133,55,0.30),
+    0 15px 50px rgba(0,0,0,0.25);
+  transform: translateY(5px);
+  transition: transform 0.18s ease;
+}
+.info-backdrop.open .info-panel {
+  transform: translateY(0);
+}
+.info-panel::before {
+  content: "";
+  position: absolute;
+  z-index: 0;
+  top: 0;
+  left: 4%;
+  width: 92%;
+  height: 42%;
+  border-radius: 50%;
+  background: linear-gradient(
+    180deg,
+    rgba(255,190,115,0.22) 0%,
+    rgba(255,160,80,0.08) 38%,
+    rgba(255,140,60,0) 100%
+  );
+  filter: blur(9px);
+  pointer-events: none;
+}
+.info-panel::after {
+  content: "";
+  position: absolute;
+  z-index: 0;
+  left: 8%;
+  right: 8%;
+  bottom: -14%;
+  height: 38%;
+  border-radius: 50%;
+  background: rgba(255,145,55,0.08);
+  filter: blur(20px);
+  pointer-events: none;
+}
+.info-close,
+.info-title,
+.info-message {
+  position: relative;
+  z-index: 2;
+}
+.info-close {
+  position: absolute;
+  top: 13px;
+  right: 13px;
+  width: 32px;
+  height: 32px;
+  display: grid;
+  place-items: center;
+  border-radius: 11px;
+  color: white;
+  font-size: 21px;
+  line-height: 1;
+  cursor: pointer;
+}
+.info-title {
+  margin: 0 35px 13px 0;
+  font-size: 20px;
+  font-weight: 800;
+  letter-spacing: -0.4px;
+}
+.info-message {
+  margin: 0;
+  color: rgba(255,255,255,0.88);
+  font-size: 14px;
+  line-height: 1.65;
+}
 /* TOAST */
 .toast {
   position: fixed;
-  z-index: 10;
+  z-index: 30;
   left: 50%;
   bottom: 24px;
   width: max-content;
@@ -477,28 +591,28 @@ button {
 }
 @media (max-width: 360px) {
   .topbar {
-    padding-right: 11px;
-    padding-left: 11px;
-    gap: 7px;
+    padding-right: 10px;
+    padding-left: 10px;
+    gap: 6px;
   }
   .brand-title {
-    font-size: 21px;
+    font-size: 20px;
   }
   .header-actions {
-    gap: 7px;
+    gap: 6px;
   }
   .candy-balance {
-    min-width: 73px;
-    height: 42px;
-    padding: 0 9px;
+    min-width: 67px;
+    height: 41px;
+    padding: 0 8px;
     gap: 5px;
   }
   .candy-number {
-    font-size: 13px;
+    font-size: 12px;
   }
-  .refresh {
-    width: 42px;
-    height: 42px;
+  .icon-button {
+    width: 39px;
+    height: 41px;
   }
   .badge-card {
     gap: 9px;
@@ -513,11 +627,10 @@ button {
   }
 }
 @media (prefers-reduced-motion: reduce) {
-  *,
-  *::before,
-  *::after {
+  .info-backdrop,
+  .info-panel,
+  .toast {
     transition: none !important;
-    animation: none !important;
   }
 }
 </style>
@@ -534,16 +647,42 @@ button {
     <span class="candy-number" id="candyBalance">0</span>
   </div>
   <button
-    class="refresh liquid-glass-orange"
+    class="icon-button refresh liquid-glass-orange"
     id="refreshButton"
     aria-label="Refresh badges"
     type="button"
   >↻</button>
+  <button
+    class="icon-button info-button liquid-glass-orange"
+    id="infoButton"
+    aria-label="Event information"
+    type="button"
+  >i</button>
 </div>
   </header>
   <div id="status" class="status"></div>
   <section id="badgeList" class="list" aria-live="polite"></section>
 </main>
+<div class="info-backdrop" id="infoBackdrop" role="presentation">
+  <section
+    class="info-panel"
+    role="dialog"
+    aria-modal="true"
+    aria-labelledby="infoTitle"
+    aria-describedby="infoMessage"
+  >
+    <button
+      class="info-close"
+      id="infoClose"
+      type="button"
+      aria-label="Close information"
+    >×</button>
+<h2 class="info-title" id="infoTitle">The Hollow Event</h2>
+<p class="info-message" id="infoMessage">
+  Join the Roblox Hollow event, complete the floors to earn badges, badges can be exchanged for candy.
+</p>
+  </section>
+</div>
 <div id="toast" class="toast" role="status"></div>
 <script>
 "use strict";
@@ -553,6 +692,9 @@ const statusElement = document.getElementById("status");
 const refreshButton = document.getElementById("refreshButton");
 const toastElement = document.getElementById("toast");
 const candyBalanceElement = document.getElementById("candyBalance");
+const infoButton = document.getElementById("infoButton");
+const infoBackdrop = document.getElementById("infoBackdrop");
+const infoClose = document.getElementById("infoClose");
 let allBadges = [];
 let loading = false;
 let toastTimer = null;
@@ -637,6 +779,26 @@ function showToast(message) {
     toastElement.classList.remove("show");
   }, 2800);
 }
+/* INFO BUTTON */
+function openInfo() {
+  infoBackdrop.classList.add("open");
+}
+function closeInfo() {
+  infoBackdrop.classList.remove("open");
+}
+infoButton.addEventListener("click", openInfo);
+infoClose.addEventListener("click", closeInfo);
+infoBackdrop.addEventListener("click", function(event) {
+  if (event.target === infoBackdrop) {
+    closeInfo();
+  }
+});
+document.addEventListener("keydown", function(event) {
+  if (event.key === "Escape") {
+    closeInfo();
+  }
+});
+/* BADGES */
 function sortBadges(badges) {
   return badges.slice().sort(function(a, b) {
     const aClaimed = isClaimed(a);
@@ -667,8 +829,7 @@ function renderBadges() {
     return;
   }
   const fragment = document.createDocumentFragment();
-  const sorted = sortBadges(allBadges);
-  sorted.forEach(function(badge) {
+  sortBadges(allBadges).forEach(function(badge) {
     fragment.appendChild(createCard(badge));
   });
   listElement.appendChild(fragment);
