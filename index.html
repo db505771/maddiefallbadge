@@ -1,655 +1,661 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
-<title>The Hollow</title>
-<style>
-:root {
-  --orange: #ff7a18;
-  --orange-light: #ffab58;
-  --text: #ffffff;
-  --muted: rgba(255,255,255,0.58);
-  --glass: rgba(255,130,35,0.12);
-  --border: rgba(255,155,75,0.28);
-}
-* {
-  box-sizing: border-box;
-  -webkit-tap-highlight-color: transparent;
-}
-html, body {
-  width: 100%;
-  height: 100%;
-  margin: 0;
-  overflow: hidden;
-  background: transparent;
-  color: var(--text);
-  font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display",
-    "Segoe UI", Arial, sans-serif;
-}
-body {
-  position: relative;
-}
-body::before {
-  content: "";
-  position: fixed;
-  width: 230px;
-  height: 230px;
-  top: -110px;
-  right: -90px;
-  border-radius: 50%;
-  background: rgba(255,111,24,0.12);
-  filter: blur(55px);
-  pointer-events: none;
-}
-body::after {
-  content: "";
-  position: fixed;
-  width: 190px;
-  height: 190px;
-  bottom: -100px;
-  left: -90px;
-  border-radius: 50%;
-  background: rgba(255,145,48,0.09);
-  filter: blur(55px);
-  pointer-events: none;
-}
-#app {
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-  position: relative;
-  z-index: 1;
-}
-header {
-  flex: 0 0 auto;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 12px;
-  padding: 17px 16px 14px;
-  border-bottom: 1px solid rgba(255,255,255,0.08);
-  background: rgba(20,14,10,0.16);
-  backdrop-filter: blur(22px);
-  -webkit-backdrop-filter: blur(22px);
-}
-.brand {
-  min-width: 0;
-}
-.brand h1 {
-  margin: 0;
-  font-size: 24px;
-  line-height: 1.1;
-  font-weight: 750;
-  letter-spacing: -0.8px;
-}
-.brand p {
-  margin: 5px 0 0;
-  font-size: 11px;
-  letter-spacing: 2.2px;
-  text-transform: uppercase;
-  color: var(--orange-light);
-  font-weight: 700;
-}
-.refresh {
-  flex-shrink: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 7px;
-  border: 1px solid var(--border);
-  border-radius: 15px;
-  padding: 10px 13px;
-  color: white;
-  background: linear-gradient(
-    135deg,
-    rgba(255,146,54,0.24),
-    rgba(255,95,15,0.09)
-  );
-  box-shadow: inset 0 1px 0 rgba(255,255,255,0.12);
-  font: inherit;
-  font-size: 12px;
-  font-weight: 650;
-  cursor: pointer;
-}
-.refresh:active {
-  transform: scale(0.96);
-}
-.refresh svg {
-  width: 15px;
-  height: 15px;
-}
-#status {
-  flex: 0 0 auto;
-  padding: 9px 16px 0;
-  min-height: 22px;
-  color: var(--muted);
-  font-size: 11px;
-}
-#status.error {
-  color: #ff9d88;
-}
-#badgeList {
-  flex: 1;
-  min-height: 0;
-  overflow-y: auto;
-  overflow-x: hidden;
-  padding: 10px 13px 25px;
-  overscroll-behavior: contain;
-  -webkit-overflow-scrolling: touch;
-  scrollbar-width: none;
-}
-#badgeList::-webkit-scrollbar {
-  display: none;
-}
-.badge-card {
-  position: relative;
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  min-height: 100px;
-  margin-bottom: 11px;
-  padding: 13px;
-  border: 1px solid var(--border);
-  border-radius: 21px;
-  overflow: hidden;
-  background: linear-gradient(
-    135deg,
-    rgba(255,139,43,0.17),
-    rgba(255,255,255,0.035) 55%,
-    rgba(255,91,18,0.09)
-  );
-  box-shadow:
-    inset 0 1px 0 rgba(255,255,255,0.11),
-    0 7px 25px rgba(0,0,0,0.08);
-  backdrop-filter: blur(18px);
-  -webkit-backdrop-filter: blur(18px);
-  animation: appear 0.3s ease both;
-}
-.badge-card::before {
-  content: "";
-  position: absolute;
-  top: 0;
-  left: 15px;
-  right: 15px;
-  height: 1px;
-  background: linear-gradient(
-    90deg,
-    transparent,
-    rgba(255,190,125,0.55),
-    transparent
-  );
-  pointer-events: none;
-}
-.badge-card.claimable {
-  border-color: rgba(255,154,67,0.62);
-  background: linear-gradient(
-    125deg,
-    rgba(255,126,29,0.25),
-    rgba(255,255,255,0.055),
-    rgba(255,100,17,0.15)
-  );
-}
-.badge-card.claimed {
-  opacity: 0.7;
-}
-.badge-icon {
-  width: 65px;
-  height: 65px;
-  flex-shrink: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border-radius: 17px;
-  overflow: hidden;
-  border: 1px solid rgba(255,255,255,0.13);
-  background: rgba(0,0,0,0.18);
-}
-.badge-icon img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
-.badge-icon .fallback {
-  color: var(--orange-light);
-  font-size: 25px;
-  font-weight: 800;
-}
-.badge-info {
-  min-width: 0;
-  flex: 1;
-  align-self: center;
-  padding: 2px 0;
-}
-.badge-name {
-  font-size: 14px;
-  line-height: 1.35;
-  font-weight: 700;
-  overflow-wrap: anywhere;
-}
-.badge-description {
-  margin-top: 5px;
-  color: var(--muted);
-  font-size: 11px;
-  line-height: 1.4;
-  overflow-wrap: anywhere;
-}
-.badge-action {
-  flex-shrink: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-.claim-button {
-  border: 0;
-  border-radius: 13px;
-  padding: 11px 12px;
-  min-width: 65px;
-  color: #241006;
-  background: linear-gradient(135deg, #ffbd79, #ff7b20);
-  box-shadow:
-    inset 0 1px 0 rgba(255,255,255,0.5),
-    0 4px 15px rgba(255,111,24,0.17);
-  font: inherit;
-  font-size: 11px;
-  font-weight: 850;
-  letter-spacing: 0.4px;
-  cursor: pointer;
-}
-.claim-button:active {
-  transform: scale(0.94);
-}
-.claim-button:disabled {
-  opacity: 0.55;
-  cursor: wait;
-}
-.earned-tag {
-  font-size: 9px;
-  font-weight: 800;
-  letter-spacing: 0.8px;
-  color: #ffbf86;
-}
-.claimed-overlay {
-  position: absolute;
-  inset: 0;
-  z-index: 2;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border-radius: inherit;
-  background: rgba(12,8,5,0.53);
-  backdrop-filter: blur(3px);
-  -webkit-backdrop-filter: blur(3px);
-  color: white;
-  font-size: 14px;
-  font-weight: 900;
-  letter-spacing: 3px;
-  text-shadow: 0 0 18px rgba(255,130,45,0.7);
-  pointer-events: none;
-}
-#emptyState {
-  display: none;
-  text-align: center;
-  padding: 45px 20px;
-  color: var(--muted);
-  font-size: 13px;
-  line-height: 1.6;
-}
-#emptyState strong {
-  display: block;
-  color: white;
-  font-size: 16px;
-  margin-bottom: 6px;
-}
-#retryButton {
-  display: none;
-  margin: 15px auto 0;
-  padding: 10px 16px;
-  border: 1px solid var(--border);
-  border-radius: 12px;
-  color: white;
-  background: var(--glass);
-  font: inherit;
-  font-size: 12px;
-}
-@keyframes appear {
-  from {
-    opacity: 0;
-    transform: translateY(7px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-@media (max-width: 350px) {
-  header {
-    padding-left: 12px;
-    padding-right: 12px;
-  }
-  .brand h1 {
-    font-size: 21px;
-  }
-  #badgeList {
-    padding-left: 9px;
-    padding-right: 9px;
-  }
-  .badge-card {
-    gap: 9px;
-    padding: 10px;
-  }
-  .badge-icon {
-    width: 53px;
-    height: 53px;
-  }
-  .claim-button {
-    min-width: 56px;
-    padding: 10px 8px;
-  }
-}
-</style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta name="theme-color" content="#000000">
+  <title>The Hollow</title>
+  <style>
+    :root {
+      --background: transparent;
+      --orange: #ff792f;
+      --orange-light: #ff9b60;
+      --white: #ffffff;
+      --muted: rgba(255,255,255,0.58);
+      --glass: rgba(255,255,255,0.055);
+      --border: rgba(255,255,255,0.10);
+    }
+    * {
+      box-sizing: border-box;
+      -webkit-tap-highlight-color: transparent;
+    }
+    html, body {
+      width: 100%;
+      height: 100%;
+      margin: 0;
+      overflow: hidden;
+      background: transparent;
+      color: var(--white);
+      font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display",
+                   "Segoe UI", sans-serif;
+    }
+    body {
+      position: relative;
+    }
+    .app {
+      height: 100%;
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      background: transparent;
+    }
+    .topbar {
+      flex-shrink: 0;
+      height: 70px;
+      padding: 12px 16px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      background: rgba(0,0,0,0.25);
+      border-bottom: 1px solid rgba(255,255,255,0.07);
+    }
+    .brand {
+      min-width: 0;
+    }
+    .brand-title {
+      font-size: 21px;
+      line-height: 1.1;
+      font-weight: 800;
+      letter-spacing: -0.7px;
+    }
+    .brand-subtitle {
+      margin-top: 5px;
+      color: var(--muted);
+      font-size: 11px;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+    }
+    .refresh {
+      flex-shrink: 0;
+      width: 43px;
+      height: 43px;
+      display: grid;
+      place-items: center;
+      border: 1px solid rgba(255,255,255,0.13);
+      border-radius: 15px;
+      color: white;
+      background: rgba(255,255,255,0.07);
+      font-size: 22px;
+      cursor: pointer;
+      transition: background 0.2s, transform 0.2s;
+    }
+    .refresh:active {
+      transform: scale(0.92);
+      background: rgba(255,121,47,0.25);
+    }
+    .refresh.spinning {
+      animation: spin 0.7s linear infinite;
+    }
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+    .status {
+      flex-shrink: 0;
+      min-height: 0;
+      padding: 0 16px;
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.4;
+      transition: padding 0.2s;
+    }
+    .status.visible {
+      padding-top: 10px;
+      padding-bottom: 4px;
+    }
+    .status.error {
+      color: #ff9b8f;
+    }
+    .list {
+      flex: 1;
+      min-height: 0;
+      overflow-y: auto;
+      overscroll-behavior: contain;
+      padding: 12px 13px 25px;
+      scrollbar-width: none;
+    }
+    .list::-webkit-scrollbar {
+      display: none;
+    }
+    .badge-card {
+      position: relative;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      gap: 13px;
+      min-height: 92px;
+      margin-bottom: 11px;
+      padding: 15px;
+      border: 1px solid var(--border);
+      border-radius: 23px;
+      background:
+        linear-gradient(
+          135deg,
+          rgba(255,255,255,0.075),
+          rgba(255,255,255,0.025)
+        );
+      box-shadow:
+        0 8px 24px rgba(0,0,0,0.12),
+        inset 0 1px 0 rgba(255,255,255,0.035);
+      backdrop-filter: blur(18px);
+      -webkit-backdrop-filter: blur(18px);
+      animation: appear 0.3s ease both;
+    }
+    .badge-card.claimable {
+      border-color: rgba(255,121,47,0.40);
+      background:
+        radial-gradient(
+          circle at 100% 0%,
+          rgba(255,121,47,0.15),
+          transparent 58%
+        ),
+        linear-gradient(
+          135deg,
+          rgba(255,255,255,0.08),
+          rgba(255,255,255,0.025)
+        );
+    }
+    @keyframes appear {
+      from {
+        opacity: 0;
+        transform: translateY(7px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+    .badge-symbol {
+      flex-shrink: 0;
+      width: 46px;
+      height: 46px;
+      display: grid;
+      place-items: center;
+      border-radius: 16px;
+      background: rgba(255,121,47,0.12);
+      border: 1px solid rgba(255,121,47,0.18);
+      color: var(--orange-light);
+      font-size: 23px;
+    }
+    .badge-info {
+      flex: 1;
+      min-width: 0;
+    }
+    .badge-name {
+      font-size: 14px;
+      font-weight: 750;
+      line-height: 1.35;
+      overflow-wrap: anywhere;
+    }
+    .badge-description {
+      margin-top: 5px;
+      color: var(--muted);
+      font-size: 11px;
+      line-height: 1.4;
+      overflow-wrap: anywhere;
+    }
+    .badge-action {
+      flex-shrink: 0;
+      min-width: 76px;
+      max-width: 105px;
+      padding: 10px 12px;
+      border: 0;
+      border-radius: 13px;
+      background: linear-gradient(135deg, #ff9b60, #ff7028);
+      color: #1a0c05;
+      font-size: 11px;
+      font-weight: 800;
+      cursor: pointer;
+      box-shadow: 0 4px 14px rgba(255,121,47,0.17);
+    }
+    .badge-action:active {
+      transform: scale(0.96);
+    }
+    .badge-action:disabled {
+      opacity: 0.65;
+      cursor: default;
+    }
+    .earned-label {
+      flex-shrink: 0;
+      padding: 7px 9px;
+      border-radius: 11px;
+      color: #8fe5b0;
+      background: rgba(65,190,119,0.10);
+      border: 1px solid rgba(65,190,119,0.15);
+      font-size: 10px;
+      font-weight: 750;
+    }
+    .locked-label {
+      flex-shrink: 0;
+      padding: 7px 9px;
+      border-radius: 11px;
+      color: rgba(255,255,255,0.44);
+      background: rgba(255,255,255,0.045);
+      border: 1px solid rgba(255,255,255,0.07);
+      font-size: 10px;
+      font-weight: 700;
+    }
+    .claimed-overlay {
+      position: absolute;
+      inset: 0;
+      z-index: 2;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      background: rgba(0,0,0,0.77);
+      backdrop-filter: blur(5px);
+      -webkit-backdrop-filter: blur(5px);
+      color: white;
+      font-size: 13px;
+      font-weight: 800;
+      letter-spacing: 1.1px;
+      text-transform: uppercase;
+    }
+    .claimed-check {
+      width: 23px;
+      height: 23px;
+      display: grid;
+      place-items: center;
+      border-radius: 50%;
+      background: rgba(112,221,157,0.17);
+      color: #8fe5b0;
+      font-size: 14px;
+    }
+    .empty {
+      min-height: 180px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 30px 20px;
+      color: var(--muted);
+    }
+    .empty-symbol {
+      margin-bottom: 13px;
+      font-size: 35px;
+      color: var(--orange-light);
+    }
+    .empty-title {
+      color: white;
+      font-size: 15px;
+      font-weight: 750;
+    }
+    .empty-message {
+      margin-top: 7px;
+      max-width: 250px;
+      font-size: 12px;
+      line-height: 1.5;
+    }
+    .toast {
+      position: fixed;
+      z-index: 10;
+      left: 50%;
+      bottom: 24px;
+      width: max-content;
+      max-width: calc(100% - 32px);
+      padding: 12px 17px;
+      border: 1px solid rgba(255,255,255,0.12);
+      border-radius: 15px;
+      background: rgba(27,27,27,0.94);
+      color: white;
+      font-size: 12px;
+      font-weight: 650;
+      text-align: center;
+      box-shadow: 0 8px 25px rgba(0,0,0,0.25);
+      opacity: 0;
+      transform: translate(-50%, 10px);
+      pointer-events: none;
+      transition: opacity 0.2s, transform 0.2s;
+    }
+    .toast.show {
+      opacity: 1;
+      transform: translate(-50%, 0);
+    }
+    @media (max-width: 360px) {
+      .badge-card {
+        gap: 9px;
+        padding: 12px;
+      }
+      .badge-symbol {
+        width: 39px;
+        height: 39px;
+        border-radius: 13px;
+      }
+      .badge-action {
+        min-width: 65px;
+        padding: 9px 8px;
+      }
+      .badge-name {
+        font-size: 13px;
+      }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        transition-duration: 0.01ms !important;
+      }
+    }
+  </style>
 </head>
 <body>
-<div id="app">
-  <header>
-    <div class="brand">
-      <h1>The Hollow</h1>
-      <p>Badge Collection</p>
-    </div>
-    <button class="refresh" id="refreshButton" type="button">
-      <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
-        <path d="M20 7v5h-5" stroke="currentColor" stroke-width="2"
-          stroke-linecap="round" stroke-linejoin="round"/>
-        <path d="M19 12a7 7 0 1 1-2-5" stroke="currentColor"
-          stroke-width="2" stroke-linecap="round"/>
-      </svg>
-      Refresh
-    </button>
-  </header>
-  <div id="status" aria-live="polite"></div>
-  <main id="badgeList">
-    <div id="emptyState">
-      <strong id="emptyTitle">Loading badges...</strong>
-      <span id="emptyMessage">Please wait.</span>
-      <button id="retryButton" type="button">Try again</button>
-    </div>
+  <main class="app">
+    <header class="topbar">
+      <div class="brand">
+        <div class="brand-title">The Hollow</div>
+        <div class="brand-subtitle">Badge Rewards</div>
+      </div>
+  <button
+    class="refresh"
+    id="refreshButton"
+    aria-label="Refresh badges"
+    type="button"
+  >↻</button>
+</header>
+<div id="status" class="status"></div>
+<section id="badgeList" class="list" aria-live="polite"></section>
   </main>
-</div>
-<script>
-(function () {
-  "use strict";
-  var API_URL =
-    "https://script.google.com/macros/s/AKfycbzoXK1oaVE9UUo5PurgJDFsGDagggu8vaauoXBHJquqoa49WEY4WIOM_erPnZbW-HjMjQ/exec";
-  var badgeList = document.getElementById("badgeList");
-  var statusBox = document.getElementById("status");
-  var refreshButton = document.getElementById("refreshButton");
-  var emptyState = document.getElementById("emptyState");
-  var emptyTitle = document.getElementById("emptyTitle");
-  var emptyMessage = document.getElementById("emptyMessage");
-  var retryButton = document.getElementById("retryButton");
-  var currentBadges = [];
-  var loading = false;
-  function setStatus(message, isError) {
-    statusBox.textContent = message || "";
-    statusBox.className = isError ? "error" : "";
-  }
-  function showEmpty(title, message, showRetry) {
-    emptyTitle.textContent = title;
-    emptyMessage.textContent = message;
-    emptyState.style.display = "block";
-    retryButton.style.display = showRetry ? "inline-block" : "none";
-  }
-  function hideEmpty() {
-    emptyState.style.display = "none";
-  }
-  function requestJson(url) {
-    return fetch(url, {
-      method: "GET",
-      redirect: "follow",
-      cache: "no-store"
-    }).then(function (response) {
+  <div id="toast" class="toast" role="status"></div>
+  <script>
+    /*
+      IMPORTANT:
+      This HTML uses badge.badgeId because that is the property
+      returned by your original Google Apps Script.
+    */
+    const API_URL =
+      "https://script.google.com/macros/s/AKfycbzoXK1oaVE9UUo5PurgJDFsGDagggu8vaauoXBHJquqoa49WEY4WIOM_erPnZbW-HjMjQ/exec";
+    const listElement = document.getElementById("badgeList");
+    const statusElement = document.getElementById("status");
+    const refreshButton = document.getElementById("refreshButton");
+    const toastElement = document.getElementById("toast");
+    let allBadges = [];
+    let toastTimer = null;
+    let loading = false;
+    function getBadgeId(badge) {
+      return String(
+        badge?.badgeId ??
+        badge?.id ??
+        ""
+      ).trim();
+    }
+    function makeUrl(action, parameters = {}) {
+      const url = new URL(API_URL);
+      url.searchParams.set("action", action);
+      Object.entries(parameters).forEach(([key, value]) => {
+        url.searchParams.set(key, String(value));
+      });
+      return url.toString();
+    }
+    async function requestJson(url) {
+      const response = await fetch(url, {
+        method: "GET",
+        redirect: "follow",
+        cache: "no-store"
+      });
       if (!response.ok) {
-        throw new Error("Request failed. Please try again.");
+        throw new Error("The server returned HTTP " + response.status + ".");
       }
-      return response.text();
-    }).then(function (text) {
+      const text = await response.text();
+      let data;
       try {
-        return JSON.parse(text);
-      } catch (error) {
+        data = JSON.parse(text);
+      } catch {
         throw new Error(
-          "The server did not return valid JSON. Check your Apps Script deployment."
+          "The server did not return JSON. Check that the Apps Script web app is deployed and accessible."
         );
       }
-    });
-  }
-  function makeUrl(action, extra) {
-    var url = API_URL + "?action=" + encodeURIComponent(action);
-    if (extra) {
-      Object.keys(extra).forEach(function (key) {
-        url += "&" + encodeURIComponent(key) +
-          "=" + encodeURIComponent(extra[key]);
+      return data;
+    }
+    function showStatus(message, type = "") {
+      statusElement.textContent = message || "";
+      statusElement.className = "status";
+      if (message) {
+        statusElement.classList.add("visible");
+      }
+      if (type) {
+        statusElement.classList.add(type);
+      }
+    }
+    function showToast(message) {
+      toastElement.textContent = message;
+      toastElement.classList.add("show");
+      clearTimeout(toastTimer);
+      toastTimer = setTimeout(() => {
+        toastElement.classList.remove("show");
+      }, 2600);
+    }
+    function escapeHtml(value) {
+      return String(value ?? "").replace(/[&<>"']/g, character => ({
+        "&": "&amp;",
+        "<": "&lt;",
+        ">": "&gt;",
+        '"': "&quot;",
+        "'": "&#039;"
+      })[character]);
+    }
+    function isEarned(badge) {
+      return badge.earned === true ||
+             badge.earned === "true" ||
+             badge.earned === 1 ||
+             badge.earned === "1";
+    }
+    function isClaimed(badge) {
+      return badge.claimed === true ||
+             badge.claimed === "true" ||
+             badge.claimed === 1 ||
+             badge.claimed === "1";
+    }
+    function sortBadges(badges) {
+      return [...badges].sort((a, b) => {
+        const aClaimed = isClaimed(a);
+        const bClaimed = isClaimed(b);
+        if (aClaimed !== bClaimed) {
+          return aClaimed ? 1 : -1;
+        }
+        const aEarned = isEarned(a);
+        const bEarned = isEarned(b);
+        if (aEarned !== bEarned) {
+          return aEarned ? -1 : 1;
+        }
+        return String(a.name || "").localeCompare(String(b.name || ""));
       });
     }
-    url += "&_=" + Date.now();
-    return url;
-  }
-  function makeIcon(badge) {
-    var box = document.createElement("div");
-    box.className = "badge-icon";
-    var iconId = Number(badge.iconImageId || 0);
-    if (iconId > 0) {
-      var image = document.createElement("img");
-      image.alt = "";
-      image.loading = "lazy";
-      image.src =
-        "https://thumbnails.roblox.com/v1/badges/icons?badgeIds=" +
-        encodeURIComponent(String(badge.id)) +
-        "&size=150x150&format=Png&isCircular=false";
-      image.onerror = function () {
-        box.innerHTML = "";
-        var fallback = document.createElement("span");
-        fallback.className = "fallback";
-        fallback.textContent = "H";
-        box.appendChild(fallback);
-      };
-      image.onload = function () {
-        if (image.naturalWidth === 0) {
-          image.onerror();
-        }
-      };
-      /*
-        Roblox's thumbnail endpoint returns JSON, not a direct image.
-        Use the dedicated helper below to resolve the actual image URL.
-      */
-      box.appendChild(image);
-      loadBadgeImage(badge.id, image, box);
-    } else {
-      var fallback = document.createElement("span");
-      fallback.className = "fallback";
-      fallback.textContent = "H";
-      box.appendChild(fallback);
-    }
-    return box;
-  }
-  function loadBadgeImage(badgeId, image, box) {
-    var url =
-      "https://thumbnails.roblox.com/v1/badges/icons?badgeIds=" +
-      encodeURIComponent(String(badgeId)) +
-      "&size=150x150&format=Png&isCircular=false";
-    fetch(url).then(function (response) {
-      if (!response.ok) {
-        throw new Error("Could not load badge image.");
+    function createCard(badge, index) {
+      const badgeId = getBadgeId(badge);
+      const earned = isEarned(badge);
+      const claimed = isClaimed(badge);
+      const card = document.createElement("article");
+      card.className = "badge-card";
+      if (earned && !claimed) {
+        card.classList.add("claimable");
       }
-      return response.json();
-    }).then(function (data) {
-      if (data.data && data.data.length && data.data[0].imageUrl) {
-        image.src = data.data[0].imageUrl;
+      card.style.animationDelay = Math.min(index * 0.025, 0.3) + "s";
+      let actionHtml = "";
+      if (claimed) {
+        actionHtml = '<span class="earned-label">Claimed</span>';
+      } else if (earned) {
+        actionHtml =
+          '<button class="badge-action" type="button">Claim</button>';
       } else {
-        throw new Error("Badge image unavailable.");
+        actionHtml = '<span class="locked-label">Locked</span>';
       }
-    }).catch(function () {
-      box.innerHTML = "";
-      var fallback = document.createElement("span");
-      fallback.className = "fallback";
-      fallback.textContent = "H";
-      box.appendChild(fallback);
-    });
-  }
-  function createCard(badge) {
-    var earned = badge.earned === true;
-    var claimed = badge.claimed === true;
-    var claimable = earned && !claimed;
-    var card = document.createElement("article");
-    card.className = "badge-card";
-    if (claimable) {
-      card.classList.add("claimable");
+      card.innerHTML = `
+        <div class="badge-symbol" aria-hidden="true">
+          ${earned ? "✦" : "◇"}
+        </div>
+        <div class="badge-info">
+          <div class="badge-name">${escapeHtml(badge.name || "Badge")}</div>
+          ${
+            badge.description
+              ? `<div class="badge-description">${escapeHtml(badge.description)}</div>`
+              : ""
+          }
+        </div>
+        ${actionHtml}
+      `;
+      if (earned && !claimed) {
+        const button = card.querySelector(".badge-action");
+        button.addEventListener("click", () => {
+          claimReward(badge, button);
+        });
+      }
+      if (claimed) {
+        const overlay = document.createElement("div");
+        overlay.className = "claimed-overlay";
+        overlay.innerHTML = `
+          <span class="claimed-check">✓</span>
+          <span>Reward Claimed</span>
+        `;
+        card.appendChild(overlay);
+      }
+      /*
+        A missing badge ID is intentionally not hidden.
+        If a badge has no ID, Claim will show a useful error
+        instead of silently sending "undefined".
+      */
+      card.dataset.badgeId = badgeId;
+      return card;
     }
-    if (claimed) {
-      card.classList.add("claimed");
-    }
-    card.appendChild(makeIcon(badge));
-    var info = document.createElement("div");
-    info.className = "badge-info";
-    var name = document.createElement("div");
-    name.className = "badge-name";
-    name.textContent = badge.name || "Unnamed Badge";
-    info.appendChild(name);
-    if (badge.description) {
-      var description = document.createElement("div");
-      description.className = "badge-description";
-      description.textContent = badge.description;
-      info.appendChild(description);
-    }
-    card.appendChild(info);
-    var action = document.createElement("div");
-    action.className = "badge-action";
-    if (claimable) {
-      var button = document.createElement("button");
-      button.type = "button";
-      button.className = "claim-button";
-      button.textContent = "CLAIM";
-      button.addEventListener("click", function () {
-        claimReward(badge, button);
+    function renderBadges() {
+      listElement.replaceChildren();
+      if (!allBadges.length) {
+        listElement.innerHTML = `
+          <div class="empty">
+            <div class="empty-symbol">◇</div>
+            <div class="empty-title">No badges found</div>
+            <div class="empty-message">
+              Pull down by using the refresh button to try loading the badges again.
+            </div>
+          </div>
+        `;
+        return;
+      }
+      const sorted = sortBadges(allBadges);
+      const fragment = document.createDocumentFragment();
+      sorted.forEach((badge, index) => {
+        fragment.appendChild(createCard(badge, index));
       });
-      action.appendChild(button);
-    } else if (earned && !claimed) {
-      var tag = document.createElement("span");
-      tag.className = "earned-tag";
-      tag.textContent = "EARNED";
-      action.appendChild(tag);
+      listElement.appendChild(fragment);
     }
-    if (!claimed) {
-      card.appendChild(action);
-    } else {
-      var overlay = document.createElement("div");
-      overlay.className = "claimed-overlay";
-      overlay.textContent = "CLAIMED";
-      card.appendChild(overlay);
-    }
-    return card;
-  }
-  function renderBadges(badges) {
-    currentBadges = badges.slice();
-    currentBadges.sort(function (a, b) {
-      function rank(item) {
-        if (item.claimed === true) {
-          return 2;
+    async function loadBadges() {
+      if (loading) return;
+      loading = true;
+      refreshButton.classList.add("spinning");
+      refreshButton.disabled = true;
+      showStatus("Loading badges…");
+      try {
+        const data = await requestJson(
+          makeUrl("checkBadges")
+        );
+        if (data.success === false) {
+          throw new Error(data.error || "Could not load badges.");
         }
-        if (item.earned === true) {
-          return 0;
-        }
-        return 1;
-      }
-      return rank(a) - rank(b);
-    });
-    var oldCards = badgeList.querySelectorAll(".badge-card");
-    oldCards.forEach(function (card) {
-      card.remove();
-    });
-    if (!currentBadges.length) {
-      showEmpty(
-        "No badges found",
-        "There are no badges to display right now.",
-        true
-      );
-      return;
-    }
-    hideEmpty();
-    currentBadges.forEach(function (badge) {
-      badgeList.appendChild(createCard(badge));
-    });
-  }
-  function loadBadges() {
-    if (loading) {
-      return;
-    }
-    loading = true;
-    refreshButton.disabled = true;
-    refreshButton.style.opacity = "0.6";
-    setStatus("Refreshing badges...", false);
-    var oldCards = badgeList.querySelectorAll(".badge-card");
-    if (!oldCards.length) {
-      showEmpty("Loading badges...", "Connecting to The Hollow.", false);
-    }
-    requestJson(makeUrl("checkBadges"))
-      .then(function (data) {
-        if (!data || data.success !== true || !Array.isArray(data.badges)) {
+        /*
+          The original Apps Script returns:
+          { success: true, badges: [...] }
+          Some versions may return the array directly.
+        */
+        const badges = Array.isArray(data)
+          ? data
+          : Array.isArray(data.badges)
+            ? data.badges
+            : null;
+        if (!badges) {
           throw new Error(
-            data && data.error
-              ? data.error
-              : "The server returned an unexpected response."
+            data.error || "The server response did not contain a badge list."
           );
         }
-        renderBadges(data.badges);
-        setStatus("", false);
-      })
-      .catch(function (error) {
-        setStatus(error.message || "Could not load badges.", true);
-        if (!oldCards.length) {
-          showEmpty(
-            "Could not load badges",
-            error.message || "Please check your connection and try again.",
-            true
-          );
+        /*
+          Normalize the IDs while keeping the original badgeId
+          property, so either name works safely in the HTML.
+        */
+        allBadges = badges.map(badge => {
+          const id = getBadgeId(badge);
+          return {
+            ...badge,
+            badgeId: id,
+            id: id
+          };
+        });
+        renderBadges();
+        showStatus("");
+      } catch (error) {
+        console.error("Badge loading error:", error);
+        showStatus(
+          error.message || "Could not load badges. Please try again.",
+          "error"
+        );
+        if (!allBadges.length) {
+          listElement.innerHTML = `
+            <div class="empty">
+              <div class="empty-symbol">!</div>
+              <div class="empty-title">Couldn't load badges</div>
+              <div class="empty-message">${escapeHtml(error.message || "Please try again.")}</div>
+            </div>
+          `;
         }
-      })
-      .finally(function () {
+      } finally {
         loading = false;
         refreshButton.disabled = false;
-        refreshButton.style.opacity = "1";
-      });
-  }
-  function claimReward(badge, button) {
-    if (button.disabled) {
-      return;
+        refreshButton.classList.remove("spinning");
+      }
     }
-    button.disabled = true;
-    button.textContent = "...";
-    requestJson(makeUrl("claimBadge", {
-      badgeId: String(badge.id)
-    }))
-      .then(function (data) {
-        if (!data || data.success !== true) {
+    async function claimReward(badge, button) {
+      const badgeId = getBadgeId(badge);
+      if (!badgeId || badgeId === "undefined" || badgeId === "null") {
+        showToast("This badge has no valid ID.");
+        console.error("Invalid badge ID:", badge);
+        return;
+      }
+      if (button.disabled) return;
+      button.disabled = true;
+      button.textContent = "Claiming…";
+      try {
+        /*
+          FIX:
+          Send the real badge.badgeId to Apps Script.
+          Do not rely on badge.id alone.
+        */
+        const data = await requestJson(
+          makeUrl("claimBadge", {
+            badgeId: badgeId
+          })
+        );
+        if (data.success !== true) {
           throw new Error(
-            data && data.error
-              ? data.error
-              : "The reward could not be claimed."
+            data.error ||
+            data.message ||
+            "The reward could not be claimed."
           );
         }
-        badge.claimed = true;
-        setStatus("Reward claimed successfully.", false);
-        renderBadges(currentBadges);
-      })
-      .catch(function (error) {
+        /*
+          Update the local badge immediately so the claimed
+          overlay appears without waiting for another refresh.
+        */
+        allBadges = allBadges.map(item => {
+          if (getBadgeId(item) === badgeId) {
+            return {
+              ...item,
+              badgeId: badgeId,
+              id: badgeId,
+              claimed: true
+            };
+          }
+          return item;
+        });
+        renderBadges();
+        showToast("Reward claimed successfully!");
+      } catch (error) {
+        console.error("Claim error:", error);
+        showToast(error.message || "Claim failed.");
         button.disabled = false;
-        button.textContent = "CLAIM";
-        setStatus(error.message || "Claim failed. Please try again.", true);
-      });
-  }
-  refreshButton.addEventListener("click", loadBadges);
-  retryButton.addEventListener("click", loadBadges);
-  loadBadges();
-})();
-</script>
+        button.textContent = "Claim";
+      }
+    }
+    refreshButton.addEventListener("click", loadBadges);
+    loadBadges();
+  </script>
 </body>
 </html>
