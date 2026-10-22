@@ -1,128 +1,363 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Roblox Badge Test</title>
-  <style>
-    body {
-      margin: 0;
-      padding: 24px;
-      background: #0e0e0e;
-      color: white;
-      font-family: -apple-system, BlinkMacSystemFont, sans-serif;
-    }
-.card {
-  max-width: 500px;
-  margin: 30px auto;
-  padding: 24px;
-  background: #1b1b1b;
-  border: 1px solid #333;
-  border-radius: 20px;
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Badge Collection</title>
+<style>
+* {
+  box-sizing: border-box;
+  -webkit-tap-highlight-color: transparent;
 }
-h2 {
-  margin-top: 0;
+html, body {
+  margin: 0 !important;
+  padding: 0 !important;
+  width: 100% !important;
+  min-height: 100% !important;
+  background: transparent !important;
+  overflow-x: hidden;
+  color: #fff;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
 }
-button {
+.container {
   width: 100%;
-  padding: 14px;
-  margin: 8px 0;
-  border: 0;
-  border-radius: 12px;
-  background: white;
-  color: black;
-  font-size: 16px;
-  font-weight: 600;
+  max-width: 650px;
+  margin: 0 auto;
 }
-#result {
-  margin-top: 20px;
-  padding: 14px;
+.header {
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 12px;
+}
+.refresh {
+  color: #fff;
+  border: 1px solid rgba(255,183,105,.45);
+  background: rgba(255,160,80,.08);
+  backdrop-filter: blur(15px) saturate(180%);
+  -webkit-backdrop-filter: blur(15px) saturate(180%);
   border-radius: 12px;
-  background: #111;
+  padding: 9px 15px;
+  font-size: 12px;
+  cursor: pointer;
+}
+#status {
+  color: rgba(255,255,255,.75);
+  font-size: 13px;
+  padding: 12px 2px;
+}
+.badge-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+/* LIQUID GLASS BADGE CARDS */
+.badge {
+  position: relative;
+  isolation: isolate;
+  width: 100%;
+  min-height: 82px;
+  padding: 17px;
+  border: none;
+  border-radius: 22px;
+  overflow: hidden;
+  background: linear-gradient(
+    135deg,
+    rgba(255,224,190,.10) 0%,
+    rgba(255,190,145,.06) 45%,
+    rgba(255,155,95,.09) 100%
+  );
+  backdrop-filter: blur(25px) saturate(180%);
+  -webkit-backdrop-filter: blur(25px) saturate(180%);
+  box-shadow:
+    inset 0 1.5px 2px rgba(255,183,105,.65),
+    inset 0 -1px 2px rgba(255,133,55,.35),
+    0 8px 24px rgba(255,135,55,.10);
+  -webkit-mask-image: -webkit-radial-gradient(white, black);
+}
+.badge::before {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  top: 0;
+  left: 4%;
+  width: 92%;
+  height: 42%;
+  border-radius: 50%;
+  background: linear-gradient(
+    180deg,
+    rgba(255,190,115,.22) 0%,
+    rgba(255,160,80,.08) 38%,
+    rgba(255,140,60,0) 100%
+  );
+  filter: blur(9px);
+  pointer-events: none;
+}
+.badge::after {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  left: 8%;
+  right: 8%;
+  bottom: -14%;
+  height: 38%;
+  border-radius: 50%;
+  background: rgba(255,145,55,.08);
+  filter: blur(20px);
+  pointer-events: none;
+}
+.badge-info {
+  position: relative;
+  z-index: 2;
+  text-align: left;
   overflow-wrap: anywhere;
-  white-space: pre-wrap;
-  line-height: 1.6;
 }
-.note {
-  color: #aaa;
-  font-size: 14px;
-  line-height: 1.5;
+.badge-name {
+  font-size: 15px;
+  font-weight: 650;
+  line-height: 1.4;
+  color: #fff;
 }
-  </style>
+.badge-id {
+  color: rgba(255,255,255,.65);
+  font-size: 11px;
+  margin-top: 7px;
+  overflow-wrap: anywhere;
+}
+/* LIQUID GLASS CLAIM BUTTON */
+.claim-button {
+  appearance: none;
+  -webkit-appearance: none;
+  position: relative;
+  isolation: isolate;
+  display: inline-block;
+  margin-top: 12px;
+  padding: 10px 20px;
+  overflow: hidden;
+  border: none;
+  border-radius: 14px;
+  color: #fff !important;
+  -webkit-text-fill-color: #fff;
+  background: linear-gradient(
+    135deg,
+    rgba(255,224,190,.10) 0%,
+    rgba(255,190,145,.06) 45%,
+    rgba(255,155,95,.09) 100%
+  );
+  backdrop-filter: blur(25px) saturate(180%);
+  -webkit-backdrop-filter: blur(25px) saturate(180%);
+  box-shadow:
+    inset 0 1.5px 2px rgba(255,183,105,.65),
+    inset 0 -1px 2px rgba(255,133,55,.35),
+    0 8px 24px rgba(255,135,55,.10);
+  font-size: 12px;
+  font-weight: 700;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  transition: transform .15s ease;
+}
+.claim-button::before {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  top: 0;
+  left: 4%;
+  width: 92%;
+  height: 65%;
+  border-radius: 50%;
+  background: linear-gradient(
+    180deg,
+    rgba(255,190,115,.22) 0%,
+    rgba(255,160,80,.08) 38%,
+    rgba(255,140,60,0) 100%
+  );
+  filter: blur(9px);
+  pointer-events: none;
+}
+.claim-button:active {
+  transform: scale(.97);
+  background: linear-gradient(
+    135deg,
+    rgba(255,220,175,.16) 0%,
+    rgba(255,175,105,.10) 50%,
+    rgba(255,145,70,.12) 100%
+  );
+}
+.claim-button:disabled {
+  opacity: .6;
+  cursor: default;
+}
+/* CLAIMED STATE */
+.badge.claimed {
+  filter: grayscale(.85);
+  background: linear-gradient(
+    135deg,
+    rgba(175,175,175,.08),
+    rgba(110,110,110,.05)
+  );
+  box-shadow:
+    inset 0 1.5px 2px rgba(220,220,220,.22),
+    inset 0 -1px 2px rgba(160,160,160,.12);
+}
+.badge.claimed .badge-info {
+  opacity: .3;
+}
+.claimed-overlay {
+  position: absolute;
+  z-index: 5;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0,0,0,.43);
+  color: #fff;
+  font-size: 25px;
+  font-weight: 850;
+  letter-spacing: 3px;
+  text-align: center;
+  pointer-events: none;
+  text-shadow: 0 2px 8px rgba(0,0,0,.5);
+}
+@media (max-width: 360px) {
+  .badge {
+    padding: 14px;
+    border-radius: 19px;
+  }
+  .claimed-overlay {
+    font-size: 22px;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .claim-button {
+    transition: none;
+  }
+}
+</style>
 </head>
 <body>
-  <div class="card">
-    <h2>Badge Ownership Test</h2>
-<p class="note">
-  Tests whether your browser can retrieve the award date
-  for one Adopt Me badge directly from Roblox.
-</p>
-<button onclick="testOwnership()">
-  Test Badge Ownership
-</button>
-<div id="result">Waiting for test...</div>
+<div class="container">
+  <div class="header">
+    <button class="refresh" onclick="loadBadges()">Refresh</button>
   </div>
-  <script>
-    async function testOwnership() {
-      const result = document.getElementById("result");
-      result.textContent = "Contacting Roblox...";
-      const url =
-        "https://badges.roblox.com/v1/users/5584737019/" +
-        "badges/awarded-dates?badgeIds=2124439922";
-      try {
-        const response = await fetch(url, {
-          method: "GET",
-          headers: {
-            "Accept": "application/json"
-          }
-        });
-        const text = await response.text();
-        let data;
-        try {
-          data = JSON.parse(text);
-        } catch {
-          result.textContent =
-            "Roblox responded, but the response wasn't JSON.\n\n" +
-            "HTTP status: " + response.status + "\n\n" +
-            text.slice(0, 1000);
-          return;
-        }
-        if (!response.ok) {
-          result.textContent =
-            "Roblox returned an HTTP error.\n\n" +
-            "HTTP status: " + response.status + "\n\n" +
-            JSON.stringify(data, null, 2);
-          return;
-        }
-        if (!Array.isArray(data.data)) {
-          result.textContent =
-            "Unexpected response:\n\n" +
-            JSON.stringify(data, null, 2);
-          return;
-        }
-        const badge = data.data.find(
-          item => String(item.badgeId) === "2124439922"
-        );
-        if (badge && badge.awardedDate) {
-          result.textContent =
-            "SUCCESS: Roblox returned an award date!\n\n" +
-            "Badge ID: " + badge.badgeId + "\n" +
-            "Award date: " + badge.awardedDate;
-        } else {
-          result.textContent =
-            "REQUEST SUCCEEDED, BUT NO AWARD DATE WAS RETURNED.\n\n" +
-            "This alone does not prove the badge is unowned.\n\n" +
-            JSON.stringify(data, null, 2);
-        }
-      } catch (error) {
-        result.textContent =
-          "BROWSER REQUEST FAILED.\n\n" +
-          error.name + ": " + error.message + "\n\n" +
-          "The browser may be blocking the request because of " +
-          "cross-origin (CORS) restrictions. This does not " +
-          "necessarily mean Roblox rejected the endpoint.";
-      }
+  <div id="status">Loading...</div>
+  <div class="badge-list" id="badgeList"></div>
+</div>
+<script>
+const API_URL =
+  "https://script.google.com/macros/s/AKfycbzoXK1oaVE9UUo5PurgJDFsGDagggu8vaauoXBHJquqoa49WEY4WIOM_erPnZbW-HjMjQ/exec";
+let badges = [];
+let loading = false;
+function apiRequest(params) {
+  return new Promise((resolve, reject) => {
+    const callback = "badgeCallback" +
+      Date.now() +
+      Math.floor(Math.random() * 10000);
+    const script = document.createElement("script");
+    const timeout = setTimeout(() => {
+      cleanup();
+      reject(new Error("Request timed out. Please try again."));
+    }, 30000);
+    function cleanup() {
+      clearTimeout(timeout);
+      delete window[callback];
+      script.remove();
     }
-  </script>
+    window[callback] = data => {
+      cleanup();
+      resolve(data);
+    };
+    const query = new URLSearchParams({
+      ...params,
+      callback
+    });
+    script.src = API_URL + "?" + query.toString();
+    script.onerror = () => {
+      cleanup();
+      reject(new Error("Could not connect to the server."));
+    };
+    document.body.appendChild(script);
+  });
+}
+async function loadBadges() {
+  if (loading) return;
+  loading = true;
+  const status = document.getElementById("status");
+  status.style.display = "block";
+  status.textContent = "Loading...";
+  try {
+    const result = await apiRequest({
+      action: "checkBadges"
+    });
+    if (!result.success) {
+      throw new Error(result.error || "Could not load collection.");
+    }
+    badges = result.badges || [];
+    renderBadges();
+    status.style.display = badges.length ? "none" : "block";
+    if (!badges.length) {
+      status.textContent = "No items found.";
+    }
+  } catch (error) {
+    status.textContent = error.message || "Something went wrong.";
+  } finally {
+    loading = false;
+  }
+}
+function renderBadges() {
+  const list = document.getElementById("badgeList");
+  list.innerHTML = "";
+  badges.forEach(badge => {
+    const card = document.createElement("div");
+    card.className = "badge" + (badge.claimed ? " claimed" : "");
+    const info = document.createElement("div");
+    info.className = "badge-info";
+    const name = document.createElement("div");
+    name.className = "badge-name";
+    name.textContent = badge.name || "Unnamed badge";
+    const id = document.createElement("div");
+    id.className = "badge-id";
+    id.textContent = "ID: " + String(badge.badgeId || "");
+    info.appendChild(name);
+    info.appendChild(id);
+    if (!badge.claimed && badge.earned === true) {
+      const button = document.createElement("button");
+      button.className = "claim-button";
+      button.textContent = "Claim";
+      button.onclick = () => claimBadge(badge.badgeId, button);
+      info.appendChild(button);
+    }
+    card.appendChild(info);
+    if (badge.claimed) {
+      const overlay = document.createElement("div");
+      overlay.className = "claimed-overlay";
+      overlay.textContent = "CLAIMED";
+      card.appendChild(overlay);
+    }
+    list.appendChild(card);
+  });
+}
+async function claimBadge(badgeId, button) {
+  button.disabled = true;
+  button.textContent = "Claiming...";
+  try {
+    const result = await apiRequest({
+      action: "claimBadge",
+      badgeId: String(badgeId)
+    });
+    if (!result.success) {
+      throw new Error(result.error || "Could not claim this badge.");
+    }
+    const badge = badges.find(
+      item => String(item.badgeId) === String(badgeId)
+    );
+    if (badge) badge.claimed = true;
+    renderBadges();
+  } catch (error) {
+    button.disabled = false;
+    button.textContent = "Claim";
+    alert(error.message || "Could not claim this badge.");
+  }
+}
+loadBadges();
+</script>
 </body>
 </html>
