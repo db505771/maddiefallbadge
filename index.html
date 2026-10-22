@@ -40,7 +40,7 @@ button {
   overflow: hidden;
   background: transparent;
 }
-/* SHARED LIQUID GLASS */
+/* LIQUID GLASS BASE */
 .liquid-glass-orange {
   appearance: none;
   -webkit-appearance: none;
@@ -55,8 +55,8 @@ button {
     rgba(255,190,145,0.06) 45%,
     rgba(255,155,95,0.09) 100%
   );
-  backdrop-filter: blur(25px) saturate(180%);
-  -webkit-backdrop-filter: blur(25px) saturate(180%);
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
   box-shadow:
     inset 0 1.5px 2px rgba(255,183,105,0.65),
     inset 0 -1px 2px rgba(255,133,55,0.35),
@@ -104,7 +104,7 @@ button {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 10px;
+  gap: 8px;
   background: transparent;
 }
 .brand {
@@ -137,25 +137,25 @@ button {
   align-items: center;
   justify-content: center;
   gap: 6px;
-  color: #ffffff;
+  color: white;
 }
-.candy-icon {
+.candy-icon,
+.candy-number {
   position: relative;
   z-index: 2;
+}
+.candy-icon {
   flex-shrink: 0;
   font-size: 19px;
   line-height: 1;
 }
 .candy-number {
-  position: relative;
-  z-index: 2;
   font-size: 13px;
   line-height: 1;
   font-weight: 800;
   font-variant-numeric: tabular-nums;
-  overflow-wrap: anywhere;
 }
-/* HEADER ICON BUTTONS */
+/* HEADER BUTTONS */
 .icon-button {
   position: relative;
   flex-shrink: 0;
@@ -170,12 +170,6 @@ button {
 }
 .icon-button:active {
   transform: none;
-  background: linear-gradient(
-    135deg,
-    rgba(255,220,175,0.16),
-    rgba(255,175,105,0.10),
-    rgba(255,145,70,0.12)
-  );
 }
 .icon-button:disabled {
   opacity: 0.7;
@@ -241,8 +235,6 @@ button {
     rgba(255,190,145,0.06) 45%,
     rgba(255,155,95,0.09) 100%
   );
-  backdrop-filter: blur(25px) saturate(180%);
-  -webkit-backdrop-filter: blur(25px) saturate(180%);
   box-shadow:
     inset 0 1.5px 2px rgba(255,183,105,0.48),
     inset 0 -1px 2px rgba(255,133,55,0.28),
@@ -331,13 +323,11 @@ button {
     rgba(255,190,145,0.12),
     rgba(255,155,95,0.16)
   );
-  backdrop-filter: blur(25px) saturate(180%);
-  -webkit-backdrop-filter: blur(25px) saturate(180%);
   box-shadow:
     inset 0 1.5px 2px rgba(255,183,105,0.50),
     inset 0 -1px 2px rgba(255,133,55,0.28),
     0 4px 14px rgba(255,135,55,0.09);
-  color: #ffffff;
+  color: white;
   font-size: 11px;
   font-weight: 800;
   cursor: pointer;
@@ -394,8 +384,6 @@ button {
   justify-content: center;
   gap: 8px;
   background: rgba(20,10,4,0.72);
-  backdrop-filter: blur(7px) saturate(180%);
-  -webkit-backdrop-filter: blur(7px) saturate(180%);
   color: white;
   font-size: 12px;
   font-weight: 800;
@@ -442,7 +430,7 @@ button {
   font-size: 12px;
   line-height: 1.5;
 }
-/* INFO POPUP */
+/* INFO POPUP — NO BACKDROP BLUR */
 .info-backdrop {
   position: fixed;
   z-index: 20;
@@ -452,8 +440,8 @@ button {
   justify-content: center;
   padding: 24px;
   background: rgba(0,0,0,0.38);
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
   opacity: 0;
   visibility: hidden;
   pointer-events: none;
@@ -479,8 +467,8 @@ button {
     rgba(255,190,145,0.10) 45%,
     rgba(255,155,95,0.14) 100%
   );
-  backdrop-filter: blur(30px) saturate(180%);
-  -webkit-backdrop-filter: blur(30px) saturate(180%);
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
   box-shadow:
     inset 0 1.5px 2px rgba(255,183,105,0.55),
     inset 0 -1px 2px rgba(255,133,55,0.30),
@@ -522,28 +510,13 @@ button {
   filter: blur(20px);
   pointer-events: none;
 }
-.info-close,
 .info-title,
 .info-message {
   position: relative;
   z-index: 2;
 }
-.info-close {
-  position: absolute;
-  top: 13px;
-  right: 13px;
-  width: 32px;
-  height: 32px;
-  display: grid;
-  place-items: center;
-  border-radius: 11px;
-  color: white;
-  font-size: 21px;
-  line-height: 1;
-  cursor: pointer;
-}
 .info-title {
-  margin: 0 35px 13px 0;
+  margin: 0 43px 13px 0;
   font-size: 20px;
   font-weight: 800;
   letter-spacing: -0.4px;
@@ -553,6 +526,74 @@ button {
   color: rgba(255,255,255,0.88);
   font-size: 14px;
   line-height: 1.65;
+}
+/* LIQUID-GLASS CLOSE BUTTON — NO ANIMATION */
+.info-close {
+  position: absolute;
+  z-index: 3;
+  top: 12px;
+  right: 12px;
+  isolation: isolate;
+  overflow: hidden;
+  width: 36px;
+  height: 36px;
+  padding: 0;
+  display: grid;
+  place-items: center;
+  border: none;
+  outline: none;
+  border-radius: 13px;
+  color: white;
+  font-size: 23px;
+  line-height: 1;
+  background: linear-gradient(
+    135deg,
+    rgba(255,224,190,0.10) 0%,
+    rgba(255,190,145,0.06) 45%,
+    rgba(255,155,95,0.09) 100%
+  );
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+  box-shadow:
+    inset 0 1.5px 2px rgba(255,183,105,0.65),
+    inset 0 -1px 2px rgba(255,133,55,0.35),
+    0 8px 24px rgba(255,135,55,0.10);
+  cursor: pointer;
+  transition: none;
+}
+.info-close::before {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  top: 0;
+  left: 4%;
+  width: 92%;
+  height: 42%;
+  border-radius: 50%;
+  background: linear-gradient(
+    180deg,
+    rgba(255,190,115,0.22) 0%,
+    rgba(255,160,80,0.08) 38%,
+    rgba(255,140,60,0) 100%
+  );
+  filter: blur(9px);
+  pointer-events: none;
+}
+.info-close::after {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  left: 8%;
+  right: 8%;
+  bottom: -14%;
+  height: 38%;
+  border-radius: 50%;
+  background: rgba(255,145,55,0.08);
+  filter: blur(20px);
+  pointer-events: none;
+}
+.info-close:active {
+  transform: none;
 }
 /* TOAST */
 .toast {
@@ -571,8 +612,6 @@ button {
     rgba(255,190,145,0.09),
     rgba(255,155,95,0.12)
   );
-  backdrop-filter: blur(25px) saturate(180%);
-  -webkit-backdrop-filter: blur(25px) saturate(180%);
   box-shadow:
     inset 0 1px 2px rgba(255,183,105,0.30),
     0 8px 24px rgba(255,135,55,0.10);
@@ -779,7 +818,7 @@ function showToast(message) {
     toastElement.classList.remove("show");
   }, 2800);
 }
-/* INFO BUTTON */
+/* INFO POPUP */
 function openInfo() {
   infoBackdrop.classList.add("open");
 }
@@ -798,7 +837,7 @@ document.addEventListener("keydown", function(event) {
     closeInfo();
   }
 });
-/* BADGES */
+/* BADGE SORTING */
 function sortBadges(badges) {
   return badges.slice().sort(function(a, b) {
     const aClaimed = isClaimed(a);
@@ -814,6 +853,7 @@ function sortBadges(badges) {
     return String(a.name || "").localeCompare(String(b.name || ""));
   });
 }
+/* DRAW BADGE LIST */
 function renderBadges() {
   listElement.replaceChildren();
   if (!allBadges.length) {
@@ -886,6 +926,7 @@ function createCard(badge) {
   card.dataset.badgeId = badgeId;
   return card;
 }
+/* LOAD CANDY BALANCE */
 async function refreshCandyBalance() {
   try {
     const data = await requestJson(makeUrl("getCandy"));
@@ -896,6 +937,7 @@ async function refreshCandyBalance() {
     console.error("Candy balance error:", error);
   }
 }
+/* LOAD BADGES */
 async function loadBadges() {
   if (loading) {
     return;
@@ -940,6 +982,7 @@ async function loadBadges() {
     refreshButton.disabled = false;
   }
 }
+/* CLAIM CANDY REWARD */
 async function claimReward(badge, button) {
   const badgeId = getBadgeId(badge);
   if (!badgeId) {
@@ -990,7 +1033,9 @@ async function claimReward(badge, button) {
     button.textContent = "Claim";
   }
 }
+/* REFRESH — NO SPIN ANIMATION */
 refreshButton.addEventListener("click", loadBadges);
+/* INITIAL LOAD */
 loadBadges();
 refreshCandyBalance();
 </script>
