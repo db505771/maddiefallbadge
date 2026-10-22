@@ -40,7 +40,7 @@ button {
   overflow: hidden;
   background: transparent;
 }
-/* LIQUID GLASS BASE */
+/* ORANGE LIQUID GLASS */
 .liquid-glass-orange {
   appearance: none;
   -webkit-appearance: none;
@@ -430,7 +430,7 @@ button {
   font-size: 12px;
   line-height: 1.5;
 }
-/* INFO POPUP — NO BACKDROP BLUR */
+/* INFO BACKDROP — DIM ONLY, NO BLUR */
 .info-backdrop {
   position: fixed;
   z-index: 20;
@@ -440,6 +440,7 @@ button {
   justify-content: center;
   padding: 24px;
   background: rgba(0,0,0,0.38);
+  /* Keep everything outside the popup sharp */
   backdrop-filter: none;
   -webkit-backdrop-filter: none;
   opacity: 0;
@@ -452,6 +453,7 @@ button {
   visibility: visible;
   pointer-events: auto;
 }
+/* INFO POPUP — BLUR ONLY INSIDE THE ROUNDED RECTANGLE */
 .info-panel {
   position: relative;
   isolation: isolate;
@@ -460,15 +462,20 @@ button {
   max-width: 340px;
   padding: 25px 22px 23px;
   border-radius: 25px;
-  border: 1px solid rgba(255,183,105,0.38);
+  border: 1px solid rgba(255,183,105,0.45);
+  /*
+    The background must remain partially transparent
+    for backdrop-filter to show the frosted-glass effect.
+  */
   background: linear-gradient(
     135deg,
-    rgba(255,224,190,0.15) 0%,
-    rgba(255,190,145,0.10) 45%,
-    rgba(255,155,95,0.14) 100%
+    rgba(255,224,190,0.20) 0%,
+    rgba(255,190,145,0.13) 45%,
+    rgba(255,155,95,0.18) 100%
   );
-  backdrop-filter: none;
-  -webkit-backdrop-filter: none;
+  /* This is the blur that affects only the popup rectangle */
+  backdrop-filter: blur(18px) saturate(150%);
+  -webkit-backdrop-filter: blur(18px) saturate(150%);
   box-shadow:
     inset 0 1.5px 2px rgba(255,183,105,0.55),
     inset 0 -1px 2px rgba(255,133,55,0.30),
@@ -479,6 +486,7 @@ button {
 .info-backdrop.open .info-panel {
   transform: translateY(0);
 }
+/* GLASS REFLECTIONS INSIDE THE POPUP */
 .info-panel::before {
   content: "";
   position: absolute;
@@ -510,6 +518,7 @@ button {
   filter: blur(20px);
   pointer-events: none;
 }
+/* POPUP TEXT */
 .info-title,
 .info-message {
   position: relative;
@@ -523,11 +532,11 @@ button {
 }
 .info-message {
   margin: 0;
-  color: rgba(255,255,255,0.88);
+  color: rgba(255,255,255,0.92);
   font-size: 14px;
   line-height: 1.65;
 }
-/* LIQUID-GLASS CLOSE BUTTON — NO ANIMATION */
+/* LIQUID GLASS CLOSE BUTTON */
 .info-close {
   position: absolute;
   z-index: 3;
@@ -540,7 +549,7 @@ button {
   padding: 0;
   display: grid;
   place-items: center;
-  border: none;
+  border: 1px solid rgba(255,183,105,0.35);
   outline: none;
   border-radius: 13px;
   color: white;
@@ -548,49 +557,50 @@ button {
   line-height: 1;
   background: linear-gradient(
     135deg,
-    rgba(255,224,190,0.10) 0%,
-    rgba(255,190,145,0.06) 45%,
-    rgba(255,155,95,0.09) 100%
+    rgba(255,224,190,0.16) 0%,
+    rgba(255,190,145,0.10) 45%,
+    rgba(255,155,95,0.14) 100%
   );
   backdrop-filter: none;
   -webkit-backdrop-filter: none;
   box-shadow:
     inset 0 1.5px 2px rgba(255,183,105,0.65),
     inset 0 -1px 2px rgba(255,133,55,0.35),
-    0 8px 24px rgba(255,135,55,0.10);
+    0 5px 15px rgba(255,135,55,0.10);
   cursor: pointer;
   transition: none;
 }
 .info-close::before {
   content: "";
   position: absolute;
-  z-index: -1;
+  z-index: 0;
   top: 0;
   left: 4%;
   width: 92%;
   height: 42%;
   border-radius: 50%;
-  background: linear-gradient(
-    180deg,
-    rgba(255,190,115,0.22) 0%,
-    rgba(255,160,80,0.08) 38%,
-    rgba(255,140,60,0) 100%
-  );
-  filter: blur(9px);
+  background: rgba(255,190,115,0.20);
+  filter: blur(7px);
   pointer-events: none;
+}
+.info-close {
+  isolation: isolate;
 }
 .info-close::after {
   content: "";
   position: absolute;
-  z-index: -1;
+  z-index: 0;
   left: 8%;
   right: 8%;
   bottom: -14%;
   height: 38%;
   border-radius: 50%;
-  background: rgba(255,145,55,0.08);
-  filter: blur(20px);
+  background: rgba(255,145,55,0.10);
+  filter: blur(12px);
   pointer-events: none;
+}
+.info-close {
+  text-shadow: 0 1px 4px rgba(0,0,0,0.25);
 }
 .info-close:active {
   transform: none;
@@ -628,6 +638,7 @@ button {
   opacity: 1;
   transform: translate(-50%, 0);
 }
+/* SMALL SCREENS */
 @media (max-width: 360px) {
   .topbar {
     padding-right: 10px;
@@ -680,28 +691,29 @@ button {
     <div class="brand">
       <div class="brand-title">The Hollow</div>
     </div>
-<div class="header-actions">
-  <div class="candy-balance liquid-glass-orange" aria-label="Candy balance">
-    <span class="candy-icon" aria-hidden="true">🍬</span>
-    <span class="candy-number" id="candyBalance">0</span>
-  </div>
-  <button
-    class="icon-button refresh liquid-glass-orange"
-    id="refreshButton"
-    aria-label="Refresh badges"
-    type="button"
-  >↻</button>
-  <button
-    class="icon-button info-button liquid-glass-orange"
-    id="infoButton"
-    aria-label="Event information"
-    type="button"
-  >i</button>
-</div>
+    <div class="header-actions">
+      <div class="candy-balance liquid-glass-orange" aria-label="Candy balance">
+        <span class="candy-icon" aria-hidden="true">🍬</span>
+        <span class="candy-number" id="candyBalance">0</span>
+      </div>
+      <button
+        class="icon-button refresh liquid-glass-orange"
+        id="refreshButton"
+        aria-label="Refresh badges"
+        type="button"
+      >↻</button>
+      <button
+        class="icon-button info-button liquid-glass-orange"
+        id="infoButton"
+        aria-label="Event information"
+        type="button"
+      >i</button>
+    </div>
   </header>
   <div id="status" class="status"></div>
   <section id="badgeList" class="list" aria-live="polite"></section>
 </main>
+<!-- INFO POPUP -->
 <div class="info-backdrop" id="infoBackdrop" role="presentation">
   <section
     class="info-panel"
@@ -716,10 +728,10 @@ button {
       type="button"
       aria-label="Close information"
     >×</button>
-<h2 class="info-title" id="infoTitle">The Hollow Event</h2>
-<p class="info-message" id="infoMessage">
-  Join the Roblox Hollow event, complete the floors to earn badges, badges can be exchanged for candy.
-</p>
+    <h2 class="info-title" id="infoTitle">The Hollow Event</h2>
+    <p class="info-message" id="infoMessage">
+      Join the Roblox hollow event, complete the floors to earn badges, badges can be exchanged for candy.
+    </p>
   </section>
 </div>
 <div id="toast" class="toast" role="status"></div>
@@ -737,6 +749,7 @@ const infoClose = document.getElementById("infoClose");
 let allBadges = [];
 let loading = false;
 let toastTimer = null;
+/* GENERAL HELPERS */
 function getBadgeId(badge) {
   return String(badge.badgeId || badge.id || "").trim();
 }
@@ -754,12 +767,12 @@ async function requestJson(url) {
     cache: "no-store",
     redirect: "follow"
   });
-  const text = await response.text();
+  const responseText = await response.text();
   if (!response.ok) {
     throw new Error("Server error: " + response.status);
   }
   try {
-    return JSON.parse(text);
+    return JSON.parse(responseText);
   } catch (error) {
     throw new Error(
       "The server did not return JSON. Check your Apps Script deployment."
@@ -853,7 +866,7 @@ function sortBadges(badges) {
     return String(a.name || "").localeCompare(String(b.name || ""));
   });
 }
-/* DRAW BADGE LIST */
+/* RENDER BADGES */
 function renderBadges() {
   listElement.replaceChildren();
   if (!allBadges.length) {
@@ -937,7 +950,7 @@ async function refreshCandyBalance() {
     console.error("Candy balance error:", error);
   }
 }
-/* LOAD BADGES */
+/* LOAD BADGES FROM APPS SCRIPT */
 async function loadBadges() {
   if (loading) {
     return;
@@ -973,7 +986,9 @@ async function loadBadges() {
         <div class="empty">
           <div class="empty-symbol">!</div>
           <div class="empty-title">Couldn't load badges</div>
-          <div class="empty-message">${escapeHtml(error.message || "Please try again.")}</div>
+          <div class="empty-message">
+            ${escapeHtml(error.message || "Please try again.")}
+          </div>
         </div>
       `;
     }
