@@ -1,363 +1,464 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>Badge Collection</title>
-<style>
-* {
-  box-sizing: border-box;
-  -webkit-tap-highlight-color: transparent;
-}
-html, body {
-  margin: 0 !important;
-  padding: 0 !important;
-  width: 100% !important;
-  min-height: 100% !important;
-  background: transparent !important;
-  overflow-x: hidden;
-  color: #fff;
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-}
-.container {
-  width: 100%;
-  max-width: 650px;
-  margin: 0 auto;
-}
-.header {
-  display: flex;
-  justify-content: flex-end;
-  margin-bottom: 12px;
-}
-.refresh {
-  color: #fff;
-  border: 1px solid rgba(255,183,105,.45);
-  background: rgba(255,160,80,.08);
-  backdrop-filter: blur(15px) saturate(180%);
-  -webkit-backdrop-filter: blur(15px) saturate(180%);
-  border-radius: 12px;
-  padding: 9px 15px;
-  font-size: 12px;
-  cursor: pointer;
-}
-#status {
-  color: rgba(255,255,255,.75);
-  font-size: 13px;
-  padding: 12px 2px;
-}
-.badge-list {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-}
-/* LIQUID GLASS BADGE CARDS */
-.badge {
-  position: relative;
-  isolation: isolate;
-  width: 100%;
-  min-height: 82px;
-  padding: 17px;
-  border: none;
-  border-radius: 22px;
-  overflow: hidden;
-  background: linear-gradient(
-    135deg,
-    rgba(255,224,190,.10) 0%,
-    rgba(255,190,145,.06) 45%,
-    rgba(255,155,95,.09) 100%
-  );
-  backdrop-filter: blur(25px) saturate(180%);
-  -webkit-backdrop-filter: blur(25px) saturate(180%);
-  box-shadow:
-    inset 0 1.5px 2px rgba(255,183,105,.65),
-    inset 0 -1px 2px rgba(255,133,55,.35),
-    0 8px 24px rgba(255,135,55,.10);
-  -webkit-mask-image: -webkit-radial-gradient(white, black);
-}
-.badge::before {
-  content: "";
-  position: absolute;
-  z-index: -1;
-  top: 0;
-  left: 4%;
-  width: 92%;
-  height: 42%;
-  border-radius: 50%;
-  background: linear-gradient(
-    180deg,
-    rgba(255,190,115,.22) 0%,
-    rgba(255,160,80,.08) 38%,
-    rgba(255,140,60,0) 100%
-  );
-  filter: blur(9px);
-  pointer-events: none;
-}
-.badge::after {
-  content: "";
-  position: absolute;
-  z-index: -1;
-  left: 8%;
-  right: 8%;
-  bottom: -14%;
-  height: 38%;
-  border-radius: 50%;
-  background: rgba(255,145,55,.08);
-  filter: blur(20px);
-  pointer-events: none;
-}
-.badge-info {
-  position: relative;
-  z-index: 2;
-  text-align: left;
-  overflow-wrap: anywhere;
-}
-.badge-name {
-  font-size: 15px;
-  font-weight: 650;
-  line-height: 1.4;
-  color: #fff;
-}
-.badge-id {
-  color: rgba(255,255,255,.65);
-  font-size: 11px;
-  margin-top: 7px;
-  overflow-wrap: anywhere;
-}
-/* LIQUID GLASS CLAIM BUTTON */
-.claim-button {
-  appearance: none;
-  -webkit-appearance: none;
-  position: relative;
-  isolation: isolate;
-  display: inline-block;
-  margin-top: 12px;
-  padding: 10px 20px;
-  overflow: hidden;
-  border: none;
-  border-radius: 14px;
-  color: #fff !important;
-  -webkit-text-fill-color: #fff;
-  background: linear-gradient(
-    135deg,
-    rgba(255,224,190,.10) 0%,
-    rgba(255,190,145,.06) 45%,
-    rgba(255,155,95,.09) 100%
-  );
-  backdrop-filter: blur(25px) saturate(180%);
-  -webkit-backdrop-filter: blur(25px) saturate(180%);
-  box-shadow:
-    inset 0 1.5px 2px rgba(255,183,105,.65),
-    inset 0 -1px 2px rgba(255,133,55,.35),
-    0 8px 24px rgba(255,135,55,.10);
-  font-size: 12px;
-  font-weight: 700;
-  cursor: pointer;
-  -webkit-tap-highlight-color: transparent;
-  transition: transform .15s ease;
-}
-.claim-button::before {
-  content: "";
-  position: absolute;
-  z-index: -1;
-  top: 0;
-  left: 4%;
-  width: 92%;
-  height: 65%;
-  border-radius: 50%;
-  background: linear-gradient(
-    180deg,
-    rgba(255,190,115,.22) 0%,
-    rgba(255,160,80,.08) 38%,
-    rgba(255,140,60,0) 100%
-  );
-  filter: blur(9px);
-  pointer-events: none;
-}
-.claim-button:active {
-  transform: scale(.97);
-  background: linear-gradient(
-    135deg,
-    rgba(255,220,175,.16) 0%,
-    rgba(255,175,105,.10) 50%,
-    rgba(255,145,70,.12) 100%
-  );
-}
-.claim-button:disabled {
-  opacity: .6;
-  cursor: default;
-}
-/* CLAIMED STATE */
-.badge.claimed {
-  filter: grayscale(.85);
-  background: linear-gradient(
-    135deg,
-    rgba(175,175,175,.08),
-    rgba(110,110,110,.05)
-  );
-  box-shadow:
-    inset 0 1.5px 2px rgba(220,220,220,.22),
-    inset 0 -1px 2px rgba(160,160,160,.12);
-}
-.badge.claimed .badge-info {
-  opacity: .3;
-}
-.claimed-overlay {
-  position: absolute;
-  z-index: 5;
-  inset: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: rgba(0,0,0,.43);
-  color: #fff;
-  font-size: 25px;
-  font-weight: 850;
-  letter-spacing: 3px;
-  text-align: center;
-  pointer-events: none;
-  text-shadow: 0 2px 8px rgba(0,0,0,.5);
-}
-@media (max-width: 360px) {
-  .badge {
-    padding: 14px;
-    border-radius: 19px;
-  }
-  .claimed-overlay {
-    font-size: 22px;
-  }
-}
-@media (prefers-reduced-motion: reduce) {
-  .claim-button {
-    transition: none;
-  }
-}
-</style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+  <title>The Hollow</title>
+  <style>
+    :root {
+      color-scheme: dark;
+      --text: #ffffff;
+      --muted: rgba(255, 255, 255, 0.58);
+      --orange: #ff9b52;
+    }
+    * {
+      box-sizing: border-box;
+    }
+    html,
+    body {
+      width: 100%;
+      min-height: 100%;
+      margin: 0;
+      background: transparent !important;
+      color: var(--text);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Arial, sans-serif;
+      -webkit-font-smoothing: antialiased;
+    }
+    body {
+      overflow-x: hidden;
+    }
+    /* Fixed header stays visible while the badge list scrolls */
+    .header {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 14px 4px 16px;
+      background: rgba(15, 15, 15, 0.16);
+      backdrop-filter: blur(22px) saturate(160%);
+      -webkit-backdrop-filter: blur(22px) saturate(160%);
+    }
+    .header-title {
+      margin: 0;
+      color: #ffffff;
+      font-size: 23px;
+      line-height: 1.2;
+      font-weight: 750;
+      letter-spacing: -0.7px;
+    }
+    .refresh-button {
+      flex-shrink: 0;
+      appearance: none;
+      -webkit-appearance: none;
+      padding: 9px 15px;
+      border: 1px solid rgba(255, 184, 125, 0.28);
+      border-radius: 13px;
+      color: #ffffff;
+      background: linear-gradient(
+        135deg,
+        rgba(255, 213, 176, 0.15),
+        rgba(255, 153, 82, 0.10)
+      );
+      backdrop-filter: blur(22px) saturate(180%);
+      -webkit-backdrop-filter: blur(22px) saturate(180%);
+      box-shadow:
+        inset 0 1px 1px rgba(255, 220, 190, 0.24),
+        0 4px 14px rgba(255, 130, 50, 0.08);
+      font-size: 12px;
+      font-weight: 700;
+      cursor: pointer;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .refresh-button:active {
+      transform: scale(0.97);
+    }
+    .status {
+      padding: 0 4px 10px;
+      color: var(--muted);
+      font-size: 12px;
+    }
+    .badge-list {
+      display: flex;
+      flex-direction: column;
+      gap: 11px;
+      padding: 0 0 22px;
+    }
+    .badge-card {
+      position: relative;
+      isolation: isolate;
+      overflow: hidden;
+      padding: 16px;
+      border: 1px solid rgba(255, 255, 255, 0.11);
+      border-radius: 18px;
+      background: linear-gradient(
+        135deg,
+        rgba(255, 255, 255, 0.085),
+        rgba(255, 255, 255, 0.035)
+      );
+      backdrop-filter: blur(18px) saturate(140%);
+      -webkit-backdrop-filter: blur(18px) saturate(140%);
+      box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.08),
+        0 5px 18px rgba(0, 0, 0, 0.04);
+      transition: opacity 0.2s ease;
+    }
+    .badge-name {
+      margin: 0;
+      color: #ffffff;
+      font-size: 15px;
+      line-height: 1.4;
+      font-weight: 700;
+      overflow-wrap: anywhere;
+    }
+    .badge-id {
+      margin-top: 5px;
+      color: rgba(255, 255, 255, 0.52);
+      font-size: 11px;
+      line-height: 1.4;
+    }
+    /* Claimable rewards get a subtle orange highlight */
+    .badge-card.claimable {
+      border-color: rgba(255, 166, 95, 0.35);
+      background: linear-gradient(
+        135deg,
+        rgba(255, 171, 103, 0.12),
+        rgba(255, 255, 255, 0.035)
+      );
+      box-shadow:
+        inset 0 1px 0 rgba(255, 210, 170, 0.12),
+        0 4px 18px rgba(255, 133, 55, 0.055);
+    }
+    /* Claimed cards are lighter, not nearly black */
+    .badge-card.claimed {
+      background: linear-gradient(
+        135deg,
+        rgba(150, 150, 150, 0.16),
+        rgba(110, 110, 110, 0.09)
+      );
+      border-color: rgba(255, 255, 255, 0.09);
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.045);
+    }
+    .badge-card.claimed .badge-name {
+      color: rgba(255, 255, 255, 0.64);
+    }
+    .badge-card.claimed .badge-id {
+      color: rgba(255, 255, 255, 0.40);
+    }
+    .claim-button {
+      appearance: none;
+      -webkit-appearance: none;
+      position: relative;
+      isolation: isolate;
+      display: inline-block;
+      margin-top: 12px;
+      padding: 10px 20px;
+      overflow: hidden;
+      border: 1px solid rgba(255, 185, 125, 0.23);
+      border-radius: 14px;
+      color: #ffffff !important;
+      -webkit-text-fill-color: #ffffff;
+      background: linear-gradient(
+        135deg,
+        rgba(255, 224, 190, 0.10) 0%,
+        rgba(255, 190, 145, 0.06) 45%,
+        rgba(255, 155, 95, 0.09) 100%
+      );
+      backdrop-filter: blur(25px) saturate(180%);
+      -webkit-backdrop-filter: blur(25px) saturate(180%);
+      box-shadow:
+        inset 0 1.5px 2px rgba(255, 183, 105, 0.65),
+        inset 0 -1px 2px rgba(255, 133, 55, 0.35),
+        0 8px 24px rgba(255, 135, 55, 0.10);
+      font-size: 12px;
+      font-weight: 700;
+      cursor: pointer;
+      -webkit-tap-highlight-color: transparent;
+      transition: transform 0.15s ease;
+    }
+    .claim-button::before {
+      content: "";
+      position: absolute;
+      z-index: -1;
+      top: 0;
+      left: 4%;
+      width: 92%;
+      height: 65%;
+      border-radius: 50%;
+      background: linear-gradient(
+        180deg,
+        rgba(255, 190, 115, 0.22) 0%,
+        rgba(255, 160, 80, 0.08) 38%,
+        rgba(255, 140, 60, 0) 100%
+      );
+      filter: blur(9px);
+      pointer-events: none;
+    }
+    .claim-button:active {
+      transform: scale(0.97);
+      background: linear-gradient(
+        135deg,
+        rgba(255, 220, 175, 0.16) 0%,
+        rgba(255, 175, 105, 0.10) 50%,
+        rgba(255, 145, 70, 0.12) 100%
+      );
+    }
+    .claim-button:disabled,
+    .refresh-button:disabled {
+      opacity: 0.55;
+      cursor: default;
+    }
+    /* Claimed stamp */
+    .claimed-overlay {
+      position: absolute;
+      inset: 0;
+      z-index: 2;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      pointer-events: none;
+      background: rgba(100, 100, 100, 0.055);
+    }
+    .claimed-label {
+      padding: 8px 15px;
+      border: 1px solid rgba(255, 255, 255, 0.19);
+      border-radius: 10px;
+      color: rgba(255, 255, 255, 0.78);
+      background: rgba(110, 110, 110, 0.22);
+      backdrop-filter: blur(7px);
+      -webkit-backdrop-filter: blur(7px);
+      font-size: 13px;
+      font-weight: 850;
+      letter-spacing: 2.5px;
+      text-align: center;
+    }
+    .empty-state {
+      padding: 24px 12px;
+      color: rgba(255, 255, 255, 0.58);
+      font-size: 13px;
+      line-height: 1.5;
+      text-align: center;
+    }
+    .error {
+      color: #ffb6a9;
+    }
+    @media (prefers-reduced-motion: reduce) {
+      *,
+      *::before,
+      *::after {
+        transition: none !important;
+      }
+    }
+  </style>
 </head>
 <body>
-<div class="container">
-  <div class="header">
-    <button class="refresh" onclick="loadBadges()">Refresh</button>
-  </div>
-  <div id="status">Loading...</div>
-  <div class="badge-list" id="badgeList"></div>
-</div>
-<script>
-const API_URL =
-  "https://script.google.com/macros/s/AKfycbzoXK1oaVE9UUo5PurgJDFsGDagggu8vaauoXBHJquqoa49WEY4WIOM_erPnZbW-HjMjQ/exec";
-let badges = [];
-let loading = false;
-function apiRequest(params) {
-  return new Promise((resolve, reject) => {
-    const callback = "badgeCallback" +
-      Date.now() +
-      Math.floor(Math.random() * 10000);
-    const script = document.createElement("script");
-    const timeout = setTimeout(() => {
-      cleanup();
-      reject(new Error("Request timed out. Please try again."));
-    }, 30000);
-    function cleanup() {
-      clearTimeout(timeout);
-      delete window[callback];
-      script.remove();
+  <header class="header">
+    <h1 class="header-title">The Hollow</h1>
+    <button class="refresh-button" id="refreshButton" type="button" onclick="loadBadges()">
+      Refresh
+    </button>
+  </header>
+  <div class="status" id="status" aria-live="polite">Loading badges…</div>
+  <main class="badge-list" id="badgeList"></main>
+  <script>
+    const API_URL =
+      "https://script.google.com/macros/s/AKfycbzoXK1oaVE9UUo5PurgJDFsGDagggu8vaauoXBHJquqoa49WEY4WIOM_erPnZbW-HjMjQ/exec";
+    const badgeList = document.getElementById("badgeList");
+    const statusText = document.getElementById("status");
+    const refreshButton = document.getElementById("refreshButton");
+    let isLoading = false;
+    function apiRequest(params) {
+      return new Promise((resolve, reject) => {
+        const callbackName =
+          "badgeCallback_" + Date.now() + "_" + Math.floor(Math.random() * 100000);
+        const timeout = setTimeout(() => {
+          cleanup();
+          reject(new Error("The request timed out. Please try refreshing."));
+        }, 25000);
+        function cleanup() {
+          clearTimeout(timeout);
+          delete window[callbackName];
+          if (script && script.parentNode) {
+            script.parentNode.removeChild(script);
+          }
+        }
+        window[callbackName] = function (data) {
+          cleanup();
+          resolve(data);
+        };
+        const script = document.createElement("script");
+        const query = new URLSearchParams({
+          ...params,
+          callback: callbackName,
+          _: Date.now().toString()
+        });
+        script.src = API_URL + "?" + query.toString();
+        script.onerror = function () {
+          cleanup();
+          reject(new Error("Could not connect to the badge service."));
+        };
+        document.body.appendChild(script);
+      });
     }
-    window[callback] = data => {
-      cleanup();
-      resolve(data);
-    };
-    const query = new URLSearchParams({
-      ...params,
-      callback
-    });
-    script.src = API_URL + "?" + query.toString();
-    script.onerror = () => {
-      cleanup();
-      reject(new Error("Could not connect to the server."));
-    };
-    document.body.appendChild(script);
-  });
-}
-async function loadBadges() {
-  if (loading) return;
-  loading = true;
-  const status = document.getElementById("status");
-  status.style.display = "block";
-  status.textContent = "Loading...";
-  try {
-    const result = await apiRequest({
-      action: "checkBadges"
-    });
-    if (!result.success) {
-      throw new Error(result.error || "Could not load collection.");
+    function normalizeBadge(badge) {
+      return {
+        ...badge,
+        id: String(
+          badge.id ??
+          badge.badgeId ??
+          badge.badgeID ??
+          badge.badge_id ??
+          ""
+        ),
+        name: String(
+          badge.name ??
+          badge.badgeName ??
+          badge.badge_name ??
+          "Untitled Badge"
+        ),
+        earned: badge.earned === true || badge.owned === true || badge.isOwned === true,
+        claimed: badge.claimed === true || badge.claimed === "TRUE" || badge.claimed === 1
+      };
     }
-    badges = result.badges || [];
-    renderBadges();
-    status.style.display = badges.length ? "none" : "block";
-    if (!badges.length) {
-      status.textContent = "No items found.";
+    function sortBadges(badges) {
+      return [...badges].sort((a, b) => {
+        // 1. Owned and not claimed
+        const aClaimable = a.earned && !a.claimed;
+        const bClaimable = b.earned && !b.claimed;
+        if (aClaimable !== bClaimable) {
+          return aClaimable ? -1 : 1;
+        }
+        // 2. Not yet claimed, but not currently claimable
+        const aClaimed = a.claimed;
+        const bClaimed = b.claimed;
+        if (aClaimed !== bClaimed) {
+          return aClaimed ? 1 : -1;
+        }
+        // Keep each group in alphabetical order
+        return a.name.localeCompare(b.name);
+      });
     }
-  } catch (error) {
-    status.textContent = error.message || "Something went wrong.";
-  } finally {
-    loading = false;
-  }
-}
-function renderBadges() {
-  const list = document.getElementById("badgeList");
-  list.innerHTML = "";
-  badges.forEach(badge => {
-    const card = document.createElement("div");
-    card.className = "badge" + (badge.claimed ? " claimed" : "");
-    const info = document.createElement("div");
-    info.className = "badge-info";
-    const name = document.createElement("div");
-    name.className = "badge-name";
-    name.textContent = badge.name || "Unnamed badge";
-    const id = document.createElement("div");
-    id.className = "badge-id";
-    id.textContent = "ID: " + String(badge.badgeId || "");
-    info.appendChild(name);
-    info.appendChild(id);
-    if (!badge.claimed && badge.earned === true) {
-      const button = document.createElement("button");
-      button.className = "claim-button";
-      button.textContent = "Claim";
-      button.onclick = () => claimBadge(badge.badgeId, button);
-      info.appendChild(button);
+    async function loadBadges() {
+      if (isLoading) return;
+      isLoading = true;
+      refreshButton.disabled = true;
+      statusText.textContent = "Loading badges…";
+      statusText.classList.remove("error");
+      try {
+        const response = await apiRequest({ action: "allBadges" });
+        if (response && response.success === false) {
+          throw new Error(response.error || "Could not load badges.");
+        }
+        const rawBadges = Array.isArray(response)
+          ? response
+          : response.badges || response.data || [];
+        if (!Array.isArray(rawBadges)) {
+          throw new Error("The badge service returned an unexpected response.");
+        }
+        const badges = sortBadges(rawBadges.map(normalizeBadge));
+        renderBadges(badges);
+        const claimableCount = badges.filter(b => b.earned && !b.claimed).length;
+        const claimedCount = badges.filter(b => b.claimed).length;
+        statusText.textContent =
+          badges.length + " badges · " +
+          claimableCount + " claimable · " +
+          claimedCount + " claimed";
+      } catch (error) {
+        statusText.textContent = error.message || "Could not load badges.";
+        statusText.classList.add("error");
+        if (!badgeList.children.length) {
+          badgeList.innerHTML =
+            '<div class="empty-state">Could not load badges. Please tap Refresh to try again.</div>';
+        }
+      } finally {
+        isLoading = false;
+        refreshButton.disabled = false;
+      }
     }
-    card.appendChild(info);
-    if (badge.claimed) {
-      const overlay = document.createElement("div");
-      overlay.className = "claimed-overlay";
-      overlay.textContent = "CLAIMED";
-      card.appendChild(overlay);
+    function renderBadges(badges) {
+      badgeList.replaceChildren();
+      if (badges.length === 0) {
+        badgeList.innerHTML =
+          '<div class="empty-state">No badges were found.</div>';
+        return;
+      }
+      const fragment = document.createDocumentFragment();
+      badges.forEach(badge => {
+        const card = document.createElement("article");
+        card.className = "badge-card";
+        if (badge.earned && !badge.claimed) {
+          card.classList.add("claimable");
+        }
+        if (badge.claimed) {
+          card.classList.add("claimed");
+        }
+        const name = document.createElement("h2");
+        name.className = "badge-name";
+        name.textContent = badge.name;
+        const id = document.createElement("div");
+        id.className = "badge-id";
+        id.textContent = "ID: " + (badge.id || "Unknown");
+        card.append(name, id);
+        if (badge.earned && !badge.claimed) {
+          const claimButton = document.createElement("button");
+          claimButton.type = "button";
+          claimButton.className = "claim-button";
+          claimButton.textContent = "Claim Reward";
+          claimButton.addEventListener("click", () => {
+            claimBadge(badge.id, claimButton);
+          });
+          card.appendChild(claimButton);
+        }
+        if (badge.claimed) {
+          const overlay = document.createElement("div");
+          overlay.className = "claimed-overlay";
+          const label = document.createElement("div");
+          label.className = "claimed-label";
+          label.textContent = "CLAIMED";
+          overlay.appendChild(label);
+          card.appendChild(overlay);
+        }
+        fragment.appendChild(card);
+      });
+      badgeList.appendChild(fragment);
     }
-    list.appendChild(card);
-  });
-}
-async function claimBadge(badgeId, button) {
-  button.disabled = true;
-  button.textContent = "Claiming...";
-  try {
-    const result = await apiRequest({
-      action: "claimBadge",
-      badgeId: String(badgeId)
-    });
-    if (!result.success) {
-      throw new Error(result.error || "Could not claim this badge.");
+    async function claimBadge(badgeId, button) {
+      if (!badgeId) {
+        statusText.textContent = "This badge is missing its ID.";
+        statusText.classList.add("error");
+        return;
+      }
+      button.disabled = true;
+      button.textContent = "Claiming…";
+      try {
+        const response = await apiRequest({
+          action: "claimBadge",
+          badgeId: badgeId
+        });
+        if (
+          response &&
+          (response.success === true || response.claimed === true)
+        ) {
+          statusText.classList.remove("error");
+          statusText.textContent = "Reward claimed!";
+          await loadBadges();
+        } else {
+          throw new Error(
+            response?.error ||
+            response?.message ||
+            "Could not claim this reward. Please try again."
+          );
+        }
+      } catch (error) {
+        statusText.textContent = error.message || "Could not claim this reward.";
+        statusText.classList.add("error");
+        button.disabled = false;
+        button.textContent = "Claim Reward";
+      }
     }
-    const badge = badges.find(
-      item => String(item.badgeId) === String(badgeId)
-    );
-    if (badge) badge.claimed = true;
-    renderBadges();
-  } catch (error) {
-    button.disabled = false;
-    button.textContent = "Claim";
-    alert(error.message || "Could not claim this badge.");
-  }
-}
-loadBadges();
-</script>
+    loadBadges();
+  </script>
 </body>
 </html>
